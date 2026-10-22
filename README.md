@@ -1,6 +1,6 @@
 # Ironclad Games
 
-A lightweight browser arcade for Chromebooks, laptops, and desktop PCs. Snake, Pong, and Memory Match each run in a sandboxed iframe. The parent arcade owns accounts, private cloud records, and progress synchronization.
+A lightweight browser arcade for Chromebooks, laptops, and desktop PCs. Snake, Pong, and Memory Match each run in a sandboxed iframe. The parent arcade manages private browser sessions, cloud records, and progress synchronization. There is no sign-in or registration interface.
 
 ## Run locally
 
@@ -18,9 +18,9 @@ The Supabase client is bundled locally; game loading does not depend on a JavaSc
 
 Supabase project: `pvqlrxaorevqnqcuyjaa`. The schema is in `supabase/schema.sql`; it has been applied to the project's remote database. Do not run it again on an existing schema. `supabase/test-isolation.sql` tests database access in a rolled-back transaction with temporary auth identities.
 
-Tables `profiles`, `game_runs`, and `game_checkpoints` all require authenticated row ownership. Runs use unique IDs for retry safety. The `save_checkpoint` RPC atomically compares revisions and returns a conflict instead of overwriting newer progress. Guests save on the device, and importing guest data requires an explicit player action. Private records are not verified competitive rankings.
+Tables `profiles`, `game_runs`, and `game_checkpoints` all require authenticated row ownership. Runs use unique IDs for retry safety. The `save_checkpoint` RPC atomically compares revisions and returns a conflict instead of overwriting newer progress. Players save automatically through private anonymous cloud sessions, with a device-local offline queue. Private records are not verified competitive rankings.
 
-Set the Supabase Site URL to the final GitHub Pages URL. Add that exact URL and `http://127.0.0.1:4173/` to permitted authentication redirect URLs. Email confirmation and password recovery require working email delivery in Supabase; production use may require a configured SMTP provider depending on the project's email restrictions. Do not disable email verification to work around email delivery.
+Anonymous sign-ins must be enabled in Supabase. The site does not request an email address, password, or player account. Keep the existing owner-based row-level security enabled for every player-data table.
 
 ## Add a game
 
@@ -42,4 +42,7 @@ The GitHub Actions workflow tests the source and publishes only `index.html`, pu
 Keyboard and mouse/trackpad; desktop Chrome/ChromeOS, Edge, and Firefox are the target browsers. The small-screen notice uses a 960 CSS pixel layout threshold; it does not claim perfect device detection. No mobile or tablet gameplay support is included.
 
 ### Automatic cloud saves
-Anonymous Supabase sessions are enabled. The arcade automatically establishes a private browser identity without a sign-in prompt. Scores and progress are saved to that identity; optional accounts support cross-device access. Clearing browser data or changing browser loses access to an anonymous identity. Existing owner-based RLS applies equally to anonymous and email accounts. New guest sessions import pending device-local guest data automatically; importing guest progress into a permanent account requires consent.
+Anonymous Supabase sessions are enabled. The arcade automatically establishes a private browser identity without a sign-in prompt. Scores and progress are saved to that browser identity. Clearing browser data or switching browsers loses access to that anonymous identity. Owner-based RLS keeps each browser identity separate. Pending device-local guest data syncs automatically when the cloud connection is available.
+
+### Interface
+The library uses a plain light layout, system fonts, direct game descriptions, search, and category filters. Games and My scores are the only navigation items. No marketing hero, ticker, sidebar, or account controls are shown.
