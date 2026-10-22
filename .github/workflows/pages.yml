@@ -28,9 +28,9 @@ jobs:
       - uses: actions/configure-pages@v5
       - name: Assemble public site only
         run: |
-          mkdir -p dist
-          cp index.html config.js dist/
-          cp -R assets src games dist/
+          mkdir -p dist/assets
+          cp index.html dist/
+          cp assets/site.css assets/icon.svg dist/assets/
           touch dist/.nojekyll
       - uses: actions/upload-pages-artifact@v3
         with:
