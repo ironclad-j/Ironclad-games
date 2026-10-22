@@ -5,53 +5,21 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta name="theme-color" content="#0b0b0b">
   <meta name="color-scheme" content="dark">
-  <meta name="description" content="Play Snake, Pong, and Memory Match on Ironclad Games. Browser games with automatic progress saves.">
+  <meta name="description" content="Ironclad Games">
   <title>Ironclad Games</title>
   <link rel="icon" href="./assets/icon.svg" type="image/svg+xml">
-  <link rel="stylesheet" href="./assets/site.css?v=drift-1">
+  <link rel="stylesheet" href="./assets/site.css?v=empty-1">
 </head>
 <body>
-  <a class="skip" href="#main">Skip to games</a>
   <div class="site">
     <header class="header">
       <a class="brand" href="./" aria-label="Ironclad Games home">Ironclad<span>Games</span></a>
-      <nav aria-label="Main navigation">
-        <button class="nav-item active" data-view="library" aria-current="page">Games</button>
-        <button class="nav-item" data-view="records">My scores</button>
-      </nav>
-      <span id="sync-status" class="sync-status" role="status">Saving on this device</span>
     </header>
     <main id="main">
-      <section id="library-view">
-        <div class="page-heading">
-          <div><h1>Games</h1><p>Pick something to play.</p></div>
-          <label class="search"><input type="search" id="search" aria-label="Search games" placeholder="Search games"><kbd>/</kbd></label>
-        </div>
-        <div class="filters" aria-label="Game categories">
-          <button data-category="all" class="selected" aria-pressed="true">All <span>4</span></button>
-          <button data-category="arcade" aria-pressed="false">Arcade <span>2</span></button>
-          <button data-category="racing" aria-pressed="false">Racing <span>1</span></button>
-          <button data-category="puzzle" aria-pressed="false">Puzzle <span>1</span></button>
-        </div>
-        <div id="game-grid" class="game-grid"></div>
-        <p id="no-results" class="empty-state" hidden>No games found. Try a different search.</p>
-        <p class="save-note">Original games save scores and progress automatically. No account needed.</p>
-      </section>
-      <section id="records-view" hidden>
-        <div class="page-heading"><div><h1>My scores</h1><p>Your best results and saved games.</p></div><button class="button" data-view="library">Back to games</button></div>
-        <div id="records-grid" class="records-grid"></div>
-      </section>
-      <section id="player-view" hidden>
-        <div class="player-heading"><button class="text-button" id="back-library">← Games</button><span id="game-controls"></span></div>
-        <div class="player-toolbar"><h1 id="game-title"></h1><div><button class="button" id="pause-game">Pause</button><button class="button" id="restart-game">New game</button><button class="button" id="fullscreen">Fullscreen</button></div></div>
-        <div id="frame-container" class="frame-container"></div>
-        <p id="player-message" role="status"></p>
-      </section>
+      <div class="page-heading"><h1>Games</h1></div>
+      <p class="empty-state">No games available.</p>
     </main>
   </div>
-  <div class="desktop-notice"><h1>Ironclad Games</h1><p>Use a wider window to play.</p></div>
-  <dialog id="choice-dialog"><h2 id="choice-title">Choose a save</h2><p id="choice-description"></p><div class="choice-actions"><button class="button" id="choice-cancel">Cancel</button><button class="button" id="choice-cloud">Use cloud save</button><button class="button primary" id="choice-device">Use device save</button></div></dialog>
-  <script type="module" src="./src/app.js?v=drift-1"></script>
+  <div class="desktop-notice"><h1>Ironclad Games</h1><p>No games available.</p></div>
 </body>
 </html>
-
