@@ -1,21 +1,55 @@
 <!doctype html>
-<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="theme-color" content="#121412"><meta name="description" content="Ironclad Games. A home for browser classics. Play Snake, Pong, and Memory Match, and carry your progress with you."><title>Ironclad Games — Built to play.</title><link rel="icon" href="./assets/icon.svg" type="image/svg+xml"><link rel="stylesheet" href="./assets/site.css"></head>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#f6f5f1">
+  <meta name="description" content="Play Snake, Pong, and Memory Match on Ironclad Games. Browser games with automatic progress saves.">
+  <title>Ironclad Games</title>
+  <link rel="icon" href="./assets/icon.svg" type="image/svg+xml">
+  <link rel="stylesheet" href="./assets/site.css">
+</head>
 <body>
-<a class="skip" href="#main">Skip to games</a>
-<aside class="sidebar"><a href="./" class="brand" aria-label="Ironclad Games home"><span class="brand-mark">Ⅰ</span><span>IRONCLAD<small>GAMES</small></span></a><div class="nav-label">YOUR ARCADE</div><nav aria-label="Main navigation"><button class="nav-item active" data-view="library"><span>▦</span> Game library <b>03</b></button><button class="nav-item" data-view="records"><span>♜</span> My records</button></nav><div class="sidebar-bottom"><span class="tiny-dot"></span> MADE FOR THE LONG GAME<p>Keyboard ready.<br>Always another round.</p><span class="edition">VOL. 001 / THE ORIGINALS</span></div></aside>
-<div class="page"><header class="topbar"><span class="breadcrumb">THE ARCADE <span>/</span> <strong id="page-name">GAME LIBRARY</strong></span><div class="header-actions"><span id="sync-status" class="sync-status" role="status">◌ Guest · saved on this device</span><button class="button account-button" id="account-button">Optional account <span>↗</span></button></div></header>
-<main id="main">
-<section id="library-view">
-<section class="hero"><div class="hero-copy"><div class="eyebrow"><span></span> NO DOWNLOADS. JUST GOOD GAMES.</div><h1>BUILT TO<br><em>PLAY.</em></h1><p>A few classics. A fresh challenge.<br>Your next personal best starts here.</p><button class="button orange" id="jump-games">Find your next game <span>↘</span></button><div class="hero-foot"><span>01 — PICK A GAME</span><span>02 — MAKE IT YOURS</span></div></div><div class="hero-art" aria-hidden="true"><div class="art-label">IRONCLAD SYSTEMS <span>● ONLINE</span></div><div class="arcade-scene"><div class="orbit orbit-one"></div><div class="orbit orbit-two"></div><div class="arcade-box"><div class="arcade-top">I / G</div><div class="arcade-screen"><div class="screen-grid"></div><div class="pixel-snake"></div><span class="pixel-food"></span><span class="screen-score">HI / 001280</span></div><div class="arcade-deck"><i></i><b></b><b></b></div><div class="arcade-front">PLAY<br>AGAIN.</div></div><div class="cross cross-a">+</div><div class="cross cross-b">+</div><span class="art-coordinate">37° / KEEP PLAYING</span></div></div></section>
-<div class="ticker"><span>INSTANT PLAY <i>✦</i> PERSONAL BESTS <i>✦</i> CLASSIC ENERGY <i>✦</i> ZERO INSTALLS <i>✦</i> INSTANT PLAY <i>✦</i> PERSONAL BESTS <i>✦</i> CLASSIC ENERGY</span></div>
-<section class="library" id="game-library"><div class="section-heading"><div><span class="eyebrow muted">PICK YOUR CHALLENGE</span><h2>The game room<span> / 03</span></h2></div><label class="search"><span>⌕</span><input type="search" id="search" aria-label="Search games" placeholder="Find a game..."><kbd>/</kbd></label></div><div class="filter-row"><div class="filters" aria-label="Game categories"><button data-category="all" class="selected" aria-pressed="true">All games <span>3</span></button><button data-category="arcade" aria-pressed="false">Arcade <span>2</span></button><button data-category="puzzle" aria-pressed="false">Puzzle <span>1</span></button></div><span class="small muted">A LITTLE COMPETITION WITH YOURSELF.</span></div><div class="game-grid" id="game-grid"></div><p id="no-results" hidden>No games found. Try another search or category.</p></section>
-<section class="save-banner"><span class="save-icon">⌁</span><div><h3>Just play. Progress saves automatically.</h3><p>Cloud saves work automatically. An optional account lets you continue on another device.</p></div><button class="button" id="save-account">Optional account <span>↗</span></button></section>
-</section>
-<section id="records-view" hidden><div class="section-heading"><div><span class="eyebrow muted">YOUR OWN HIGH SCORE TO BEAT</span><h1 class="view-title">My records.</h1></div><button class="button" data-view="library">Back to games ↗</button></div><div id="records-grid" class="records-grid"></div><button class="button" id="import-guest" hidden>Import this device’s guest records</button></section>
-<section id="player-view" hidden><div class="player-heading"><button class="text-button" id="back-library">← Game library</button><span id="game-controls" class="muted"></span></div><div class="player-toolbar"><h2 id="game-title"></h2><div><button class="button" id="pause-game">Pause</button><button class="button" id="restart-game">New game</button><button class="button" id="fullscreen">Fullscreen ↗</button></div></div><div id="frame-container" class="frame-container"></div><p id="player-message" role="status"></p><div class="player-note">PLAY YOUR WAY. BEAT YOUR BEST.<span>Progress saves automatically when you pause.</span></div></section>
-<footer><span class="footer-brand">IRONCLAD GAMES <i>✦</i></span><span>BUILT FOR CHROMEBOOKS, LAPTOPS & PCs.</span><span>© <span id="year">2026</span> IRONCLAD GAMES</span></footer></main></div>
-<div class="desktop-notice"><span class="brand-mark">Ⅰ</span><h1>A bigger screen.<br>A better game.</h1><p>Ironclad Games is built for Chromebooks, laptops, and desktop PCs. Come back with a keyboard and mouse or trackpad.</p></div>
-<dialog id="account-dialog"><form id="auth-form"><div class="dialog-top"><span class="eyebrow">PLAYER ACCOUNT</span><button type="button" class="close-button" id="close-account" aria-label="Close account">×</button></div><h2 id="auth-title">Welcome back.</h2><p id="auth-description">Your next personal best is waiting.</p><div id="signed-in-panel" hidden><p id="account-email"></p><button class="button" type="button" id="sign-out">Sign out</button></div><div id="auth-fields"><label>Email address<input id="email" type="email" autocomplete="email" required></label><label id="password-label">Password<input id="password" type="password" autocomplete="current-password" minlength="8" required></label><button class="button orange wide" id="auth-submit">Sign in ↗</button><div class="auth-links"><button type="button" id="toggle-auth">Create an account</button><button type="button" id="recover-password">Forgot password?</button></div></div><p id="auth-message" role="status"></p></form></dialog>
-<dialog id="choice-dialog"><h2 id="choice-title">Choose your progress</h2><p id="choice-description"></p><div class="choice-actions"><button class="button" id="choice-cancel">Cancel</button><button class="button" id="choice-cloud">Use cloud save</button><button class="button orange" id="choice-device">Use device save</button></div></dialog>
-<script type="module" src="./src/app.js"></script></body></html>
-
+  <a class="skip" href="#main">Skip to games</a>
+  <div class="site">
+    <header class="header">
+      <a class="brand" href="./" aria-label="Ironclad Games home">Ironclad<span>Games</span></a>
+      <nav aria-label="Main navigation">
+        <button class="nav-item active" data-view="library" aria-current="page">Games</button>
+        <button class="nav-item" data-view="records">My scores</button>
+      </nav>
+      <span id="sync-status" class="sync-status" role="status">Saving on this device</span>
+    </header>
+    <main id="main">
+      <section id="library-view">
+        <div class="page-heading">
+          <div><h1>Games</h1><p>Pick something to play.</p></div>
+          <label class="search"><input type="search" id="search" aria-label="Search games" placeholder="Search games"><kbd>/</kbd></label>
+        </div>
+        <div class="filters" aria-label="Game categories">
+          <button data-category="all" class="selected" aria-pressed="true">All <span>3</span></button>
+          <button data-category="arcade" aria-pressed="false">Arcade <span>2</span></button>
+          <button data-category="puzzle" aria-pressed="false">Puzzle <span>1</span></button>
+        </div>
+        <div id="game-grid" class="game-grid"></div>
+        <p id="no-results" class="empty-state" hidden>No games found. Try a different search.</p>
+        <p class="save-note">Your scores and progress save automatically. No account needed.</p>
+      </section>
+      <section id="records-view" hidden>
+        <div class="page-heading"><div><h1>My scores</h1><p>Your best results and saved games.</p></div><button class="button" data-view="library">Back to games</button></div>
+        <div id="records-grid" class="records-grid"></div>
+      </section>
+      <section id="player-view" hidden>
+        <div class="player-heading"><button class="text-button" id="back-library">← Games</button><span id="game-controls"></span></div>
+        <div class="player-toolbar"><h1 id="game-title"></h1><div><button class="button" id="pause-game">Pause</button><button class="button" id="restart-game">New game</button><button class="button" id="fullscreen">Fullscreen</button></div></div>
+        <div id="frame-container" class="frame-container"></div>
+        <p id="player-message" role="status"></p>
+      </section>
+    </main>
+    <footer><span>Ironclad Games</span><span>For Chromebooks, laptops &amp; PCs.</span></footer>
+  </div>
+  <div class="desktop-notice"><h1>Ironclad Games</h1><p>Open this site on a Chromebook, laptop, or desktop PC to play.</p></div>
+  <dialog id="choice-dialog"><h2 id="choice-title">Choose a save</h2><p id="choice-description"></p><div class="choice-actions"><button class="button" id="choice-cancel">Cancel</button><button class="button" id="choice-cloud">Use cloud save</button><button class="button primary" id="choice-device">Use device save</button></div></dialog>
+  <script type="module" src="./src/app.js"></script>
+</body>
+</html>
