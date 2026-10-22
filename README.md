@@ -47,3 +47,5 @@ Anonymous Supabase sessions are enabled. The arcade automatically establishes a 
 ### Interface
 The library uses a minimal black layout, system fonts, direct game descriptions, search, and category filters. Games and My scores are the only navigation items. No marketing hero, ticker, sidebar, account controls, or device-list footer is shown.
 
+
+Drift Hunters Pro is embedded from OnlineGames.io in a sandboxed iframe. Its controls and saves are managed by the external game.
