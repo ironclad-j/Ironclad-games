@@ -45,4 +45,5 @@ Keyboard and mouse/trackpad; desktop Chrome/ChromeOS, Edge, and Firefox are the 
 Anonymous Supabase sessions are enabled. The arcade automatically establishes a private browser identity without a sign-in prompt. Scores and progress are saved to that browser identity. Clearing browser data or switching browsers loses access to that anonymous identity. Owner-based RLS keeps each browser identity separate. Pending device-local guest data syncs automatically when the cloud connection is available.
 
 ### Interface
-The library uses a plain light layout, system fonts, direct game descriptions, search, and category filters. Games and My scores are the only navigation items. No marketing hero, ticker, sidebar, or account controls are shown.
+The library uses a minimal black layout, system fonts, direct game descriptions, search, and category filters. Games and My scores are the only navigation items. No marketing hero, ticker, sidebar, account controls, or device-list footer is shown.
+
