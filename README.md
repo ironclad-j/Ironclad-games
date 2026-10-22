@@ -49,3 +49,5 @@ The library uses a minimal black layout, system fonts, direct game descriptions,
 
 
 Drift Hunters Pro is embedded from OnlineGames.io in a sandboxed iframe. Its controls and saves are managed by the external game.
+
+Current published library: empty. All game listings and player controls have been removed from the homepage.
