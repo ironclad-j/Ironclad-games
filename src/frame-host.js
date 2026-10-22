@@ -13,6 +13,7 @@ export function createMessageGate({source,gameId,sessionId}) {
   return {accept(data,sender){if(!alive||sender!==source||!validateEnvelope(data,{gameId,sessionId}))return false;if(data.type==='complete'){if(runs.has(data.payload.runId))return false;runs.add(data.payload.runId);}return true;},destroy(){alive=false;runs.clear();}};
 }
 export function mountGame({container,game,onCheckpoint,onComplete,onError,onReady,onPaused,checkpoint=null}) {
+  if(game.external)return mountExternalGame({container,game,onReady,onError});
   const frame=document.createElement('iframe');frame.title=`Play ${game.title}`;frame.sandbox='allow-scripts';frame.allow='fullscreen';frame.referrerPolicy='strict-origin';
   const sessionId=crypto.randomUUID();let port=null,alive=true,ready=false;const pauseWaiters=new Set();
   const loading=document.createElement('span');loading.className='frame-loading';loading.textContent='Loading your next challenge…';container.replaceChildren(loading);
@@ -28,4 +29,15 @@ export function mountGame({container,game,onCheckpoint,onComplete,onError,onRead
   }
   window.addEventListener('message',handshake);frame.src=game.frameUrl;container.append(frame);
   return {pause(){return new Promise(resolve=>{const finish=()=>{pauseWaiters.delete(finish);resolve();};pauseWaiters.add(finish);setTimeout(finish,400);send('pause');});},resume(value){send('resume',{checkpoint:value??null});},restart(){send('restart');},destroy(){alive=false;clearTimeout(timer);window.removeEventListener('message',handshake);gate?.destroy();port?.close();frame.remove();for(const resolve of pauseWaiters)resolve();pauseWaiters.clear();}};
+}
+
+// Keep external games cross-origin and block top navigation and popups.
+function mountExternalGame({container,game,onReady,onError}) {
+ const frame=document.createElement('iframe');frame.title=`Play ${game.title}`;
+ frame.sandbox='allow-scripts allow-same-origin allow-pointer-lock';frame.allow='fullscreen; autoplay; gamepad';frame.referrerPolicy='strict-origin';
+ const loading=document.createElement('span');loading.className='frame-loading';loading.textContent='Loading game...';
+ frame.addEventListener('load',()=>{loading.remove();onReady?.();});
+ frame.addEventListener('error',()=>{loading.remove();onError?.('The game could not load. Please try again.');});
+ frame.src=game.frameUrl;container.replaceChildren(loading,frame);
+ return {pause:async()=>{},resume(){},restart(){container.append(loading);frame.src=game.frameUrl;},destroy(){frame.remove();loading.remove();}};
 }
