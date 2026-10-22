@@ -1,5 +1,5 @@
 import {catalog,filterGames} from './catalog.js';
-import {gameArt} from './art.js';
+import {gameArt} from './art.js?v=black-1';
 import {mountGame} from './frame-host.js';
 import {createSaveStore} from './save-store.js';
 import {summarize} from './records.js';
