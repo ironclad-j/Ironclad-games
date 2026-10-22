@@ -5,7 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta name="theme-color" content="#0b0b0b">
   <meta name="color-scheme" content="dark">
-  <meta name="description" content="Play Drive Mad on Ironclad Games.">
+  <meta name="description" content="Play driving and racing games on Ironclad Games.">
   <title>Ironclad Games</title>
   <link rel="icon" href="./assets/icon.svg" type="image/svg+xml">
   <link rel="stylesheet" href="./assets/site.css?v=drive-1">
@@ -23,13 +23,19 @@
             <div class="game-art" style="--card-bg:#191919;height:auto;aspect-ratio:1">
               <img src="./assets/drive-mad.png" alt="Drive Mad truck on a curved track" width="554" height="554" style="display:block;width:100%;height:100%;object-fit:cover" loading="lazy">
             </div>
-            <div class="game-content"><div class="game-title"><h2>Drive Mad</h2><span class="category">Driving</span></div><p>Keep your balance and reach the finish.</p><button class="play-button" id="play-drive" aria-label="Play Drive Mad">Play</button></div>
+            <div class="game-content"><div class="game-title"><h2>Drive Mad</h2><span class="category">Driving</span></div><p>Keep your balance and reach the finish.</p><button class="play-button" id="play-drive" data-game="drive-mad" aria-label="Play Drive Mad">Play</button></div>
+          </article>
+          <article class="game-card">
+            <div class="game-art" style="--card-bg:#181d22;height:auto;aspect-ratio:1">
+              <svg viewBox="0 0 320 320" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true"><path fill="#181d22" d="M0 0h320v320H0z"/><path d="m36 320 98-320h52l98 320" fill="#30383e"/><path d="M160 28v42m0 26v42m0 26v42m0 26v42" stroke="#7d8587" stroke-width="4"/><g transform="translate(160 168)"><ellipse cy="52" rx="17" ry="34" fill="#101215" stroke="#989f9e" stroke-width="5"/><ellipse cy="-62" rx="13" ry="25" fill="#101215" stroke="#989f9e" stroke-width="4"/><path d="m-24 24 4-62h40l4 62-24 27z" fill="#b5bcb9"/><path d="M-13-24h26v38h-26z" fill="#3e565e"/><path d="m-38-45 16 10h44l16-10" stroke="#d1d6d2" stroke-width="7" stroke-linecap="round"/><path d="M-21 4h-17m59 0h17" stroke="#778284" stroke-width="6"/></g></svg>
+            </div>
+            <div class="game-content"><div class="game-title"><h2>Moto Road Rash 3D</h2><span class="category">Racing</span></div><p>Ride through traffic and take on the road.</p><button class="play-button" id="play-moto" data-game="moto-road-rash-3d" aria-label="Play Moto Road Rash 3D">Play</button></div>
           </article>
         </div>
       </section>
       <section id="player-view" hidden>
         <div class="player-heading"><button class="text-button" id="back-library">&larr; Games</button><span>Use the controls shown in the game.</span></div>
-        <div class="player-toolbar"><h1>Drive Mad</h1><div><button class="button" id="fullscreen">Fullscreen</button></div></div>
+        <div class="player-toolbar"><h1 id="game-title">Drive Mad</h1><div><button class="button" id="fullscreen">Fullscreen</button></div></div>
         <div class="frame-container" id="frame-container"></div>
         <p id="player-message" role="status"></p>
       </section>
@@ -38,12 +44,18 @@
   <div class="desktop-notice"><h1>Ironclad Games</h1><p>Use a wider window to play.</p></div>
   <script>
     const library=document.getElementById('library-view'),player=document.getElementById('player-view'),container=document.getElementById('frame-container'),message=document.getElementById('player-message');
-    document.getElementById('play-drive').addEventListener('click',()=>{
-      const frame=document.createElement('iframe');frame.id='plyIframe';frame.title='Drive Mad';frame.allow='fullscreen; autoplay';frame.allowFullscreen=true;frame.sandbox='allow-scripts allow-same-origin allow-forms allow-pointer-lock';frame.referrerPolicy='strict-origin';
-      message.textContent='Loading Drive Mad...';frame.addEventListener('load',()=>{message.textContent='';frame.focus();});
-      frame.src='https://ubghyper.github.io/GameList.github.io/Drive-Mad/';container.replaceChildren(frame);library.hidden=true;player.hidden=false;window.scrollTo(0,0);
-    });
-    document.getElementById('back-library').addEventListener('click',()=>{container.replaceChildren();player.hidden=true;library.hidden=false;document.getElementById('play-drive').focus();});
+    const games={
+      'drive-mad':{title:'Drive Mad',src:'https://ubghyper.github.io/GameList.github.io/Drive-Mad/'},
+      'moto-road-rash-3d':{title:'Moto Road Rash 3D',src:'https://class811.github.io/g7/moto-road-rash-3d/'}
+    };
+    let activeButton=null;
+    document.querySelectorAll('[data-game]').forEach(button=>button.addEventListener('click',()=>{
+      const game=games[button.dataset.game];if(!game)return;activeButton=button;
+      const frame=document.createElement('iframe');frame.id='plyIframe';frame.title=game.title;frame.allow='fullscreen; autoplay';frame.allowFullscreen=true;frame.sandbox='allow-scripts allow-same-origin allow-forms allow-pointer-lock';frame.referrerPolicy='strict-origin';
+      document.getElementById('game-title').textContent=game.title;message.textContent=`Loading ${game.title}...`;frame.addEventListener('load',()=>{message.textContent='';frame.focus();});
+      frame.src=game.src;container.replaceChildren(frame);library.hidden=true;player.hidden=false;window.scrollTo(0,0);
+    }));
+    document.getElementById('back-library').addEventListener('click',()=>{container.replaceChildren();player.hidden=true;library.hidden=false;activeButton?.focus();});
     document.getElementById('fullscreen').addEventListener('click',async()=>{try{if(document.fullscreenElement)await document.exitFullscreen();else await container.requestFullscreen();container.querySelector('iframe')?.focus();}catch{message.textContent='Fullscreen is unavailable. You can keep playing here.';}});
   </script>
 </body>
