@@ -4,6 +4,10 @@ The arcade supports Chromebooks, laptops, and desktop PCs. All games run in opaq
 
 ## Confirmed
 
+- GitHub Pages deployment succeeded: https://ironclad-j.github.io/Ironclad-games/
+- The deployed workflow passed all 21 tests and static asset checks. The deployed source matches the tested source; root-file differences from browser upload were only line endings and a trailing license newline.
+- Live-site search and iframe loading were checked. A Memory Match move saved to the cloud without sign-in and restored inside its iframe after reloading the published site.
+
 - 21 automated tests pass: game rules, checkpoints, catalog filtering, frame message rejection, input switching, automatic guest sessions, offline retries, account boundaries, and save conflicts.
 - Static asset and publishable-configuration checks pass.
 - Supabase security and performance advisors returned no findings.
