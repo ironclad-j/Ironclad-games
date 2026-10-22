@@ -53,3 +53,5 @@ Drift Hunters Pro is embedded from OnlineGames.io in a sandboxed iframe. Its con
 Current published library: empty. All game listings and player controls have been removed from the homepage.
 
 Current library: Drive Mad, embedded from the supplied host. Ironclad labels the player Drive Mad; in-game branding and credits are unchanged. The iframe does not have permission to navigate the top-level site or open popups.
+
+Moto Road Rash 3D is also embedded from the user-supplied class811 source. Both games use the same on-site player with fullscreen and return navigation.
