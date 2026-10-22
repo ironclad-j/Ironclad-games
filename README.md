@@ -28,7 +28,8 @@ Set the Supabase Site URL to the final GitHub Pages URL. Add that exact URL and 
 2. Add its title, category, relative iframe URL, scoring direction, instructions, and checkpoint version to `src/catalog.js`.
 3. Include `games/shared/bridge.js` as a classic script, then call `createGameBridge({init(checkpoint),pause(),resume(checkpoint),restart()})`. Add `data-game="<stable-id>"` to the document body.
 4. Send versioned checkpoints with `bridge.checkpoint(data)` and completed results with `bridge.complete({runId,score,details})`. A run ID must be a fresh UUID for each new round and remain stable when restoring progress. Report pause state using `bridge.paused(boolean)`.
-5. Validate saved-state shape and version before restoring. Add meaningful rule and checkpoint tests under `tests/`, plus a game-art entry in `src/art.js`.
+5. Expose the game's canonical validator as `globalThis.IroncladEngines[stableId]` with a `restore(checkpoint)` function, and import its rule script in `src/checkpoints.js`. This lets the parent reject invalid saves before storing them. Checkpoints include `version`, `state`, `runId`, `elapsed` (milliseconds), and `completed` (boolean).
+6. Validate saved-state shape and version before restoring. Add meaningful rule and checkpoint tests under `tests/`, plus a game-art entry in `src/art.js`.
 
 Iframes allow scripts but not same-origin privileges. They receive a MessagePort after the host verifies the sending window. Envelopes contain protocol, game ID, session ID, type, and payload; messages above 64 KiB, stale sessions, and duplicate completion events are rejected. Games never receive auth tokens. Third-party embeds must permit framing and integrate this protocol to support cloud saves; embedding arbitrary games alone cannot reveal their internal progress.
 
