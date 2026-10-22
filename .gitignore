@@ -1,0 +1,5 @@
+node_modules/
+.superpowers/
+work/
+config.local.js
+.env*

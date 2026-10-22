@@ -1,0 +1,1 @@
+{"name":"ironclad-games","version":"1.0.0","private":true,"type":"module","scripts":{"test":"node --test tests/*.test.js","verify":"node scripts/verify-site.mjs","dev":"node scripts/serve.mjs"},"dependencies":{"@supabase/supabase-js":"2.118.0","esbuild":"0.28.2"}}
