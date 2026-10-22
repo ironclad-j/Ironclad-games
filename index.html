@@ -8,7 +8,7 @@
   <meta name="description" content="Play Snake, Pong, and Memory Match on Ironclad Games. Browser games with automatic progress saves.">
   <title>Ironclad Games</title>
   <link rel="icon" href="./assets/icon.svg" type="image/svg+xml">
-  <link rel="stylesheet" href="./assets/site.css?v=black-1">
+  <link rel="stylesheet" href="./assets/site.css?v=drift-1">
 </head>
 <body>
   <a class="skip" href="#main">Skip to games</a>
@@ -28,13 +28,14 @@
           <label class="search"><input type="search" id="search" aria-label="Search games" placeholder="Search games"><kbd>/</kbd></label>
         </div>
         <div class="filters" aria-label="Game categories">
-          <button data-category="all" class="selected" aria-pressed="true">All <span>3</span></button>
+          <button data-category="all" class="selected" aria-pressed="true">All <span>4</span></button>
           <button data-category="arcade" aria-pressed="false">Arcade <span>2</span></button>
+          <button data-category="racing" aria-pressed="false">Racing <span>1</span></button>
           <button data-category="puzzle" aria-pressed="false">Puzzle <span>1</span></button>
         </div>
         <div id="game-grid" class="game-grid"></div>
         <p id="no-results" class="empty-state" hidden>No games found. Try a different search.</p>
-        <p class="save-note">Your scores and progress save automatically. No account needed.</p>
+        <p class="save-note">Original games save scores and progress automatically. No account needed.</p>
       </section>
       <section id="records-view" hidden>
         <div class="page-heading"><div><h1>My scores</h1><p>Your best results and saved games.</p></div><button class="button" data-view="library">Back to games</button></div>
@@ -50,7 +51,7 @@
   </div>
   <div class="desktop-notice"><h1>Ironclad Games</h1><p>Use a wider window to play.</p></div>
   <dialog id="choice-dialog"><h2 id="choice-title">Choose a save</h2><p id="choice-description"></p><div class="choice-actions"><button class="button" id="choice-cancel">Cancel</button><button class="button" id="choice-cloud">Use cloud save</button><button class="button primary" id="choice-device">Use device save</button></div></dialog>
-  <script type="module" src="./src/app.js?v=black-1"></script>
+  <script type="module" src="./src/app.js?v=drift-1"></script>
 </body>
 </html>
 
