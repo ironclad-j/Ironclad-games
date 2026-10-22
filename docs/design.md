@@ -51,3 +51,6 @@ Supabase row-level security: https://supabase.com/docs/guides/database/postgres/
 Iframe messaging reference: https://developer.mozilla.org/en-US/docs/Web/API/Window/postMessage
 
 
+
+## UI revision requested by the user
+The latest user instruction removes the sign-in interface entirely and replaces the original dark promotional layout with a simple light game library. System fonts, plain descriptions, Games/My scores navigation, and game cards replace the hero, ticker, decorative arcade machine, slogans, sidebar, and optional-account banner. Private anonymous cloud sessions continue to save progress automatically in each browser. The original optional email-account interface is superseded.
