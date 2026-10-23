@@ -87,6 +87,10 @@
             <div class="game-art" style="--card-bg:#fff;height:auto;aspect-ratio:1"><img src="./assets/ovo-2.png" alt="OvO 2" width="224" height="224" style="display:block;width:100%;height:100%;object-fit:cover" loading="lazy"></div>
             <div class="game-content"><div class="game-title"><h2>OvO 2</h2><span class="category">Platformer</span></div><p>Jump and slide through a new set of platforming challenges.</p><button class="play-button" id="play-ovo-2" data-game="ovo-2" aria-label="Play OvO 2">Play</button></div>
           </article>
+          <article class="game-card">
+            <div class="game-art" style="--card-bg:#071d3b;height:auto;aspect-ratio:1"><img src="./assets/potato-league.png" alt="Potato League" width="315" height="250" style="display:block;width:100%;height:100%;object-fit:contain" loading="lazy"></div>
+            <div class="game-content"><div class="game-title"><h2>Potato League</h2><span class="category">Sports</span></div><p>Boost, jump, and score in car soccer.</p><button class="play-button" id="play-potato" data-game="potato-league" aria-label="Play Potato League">Play</button></div>
+          </article>
         </div>
       </section>
       <section id="player-view" hidden>
@@ -117,11 +121,12 @@
       "moto-x3m-2":{"title": "Moto X3M 2", "src": "https://class811.github.io/g8/moto-x3m-2/"},
       "moto-x3m-winter":{"title": "Moto X3M Winter", "src": "https://class811.github.io/g/moto-x3m-winter/"}
       , 'ovo-2':{title:'OvO 2',src:'https://iogamesweb.com/play/ovo-2/'}
+      , 'potato-league':{title:'Potato League',src:'https://itch.io/embed-upload/19853545?color=0b0b0b'}
     };
     let activeButton=null;
     document.querySelectorAll('[data-game]').forEach(button=>button.addEventListener('click',()=>{
       const game=games[button.dataset.game];if(!game)return;activeButton=button;
-      const frame=document.createElement('iframe');frame.id='plyIframe';frame.title=game.title;frame.allow='fullscreen; autoplay';frame.allowFullscreen=true;frame.sandbox='allow-scripts allow-same-origin allow-forms allow-pointer-lock';frame.referrerPolicy='strict-origin';
+      const frame=document.createElement('iframe');frame.id='plyIframe';frame.title=game.title;frame.allow='fullscreen; autoplay; gamepad';frame.allowFullscreen=true;frame.sandbox='allow-scripts allow-same-origin allow-forms allow-pointer-lock';frame.referrerPolicy='strict-origin';
       document.getElementById('game-title').textContent=game.title;message.textContent=`Loading ${game.title}...`;frame.addEventListener('load',()=>{message.textContent='';frame.focus();});
       frame.src=game.src;container.replaceChildren(frame);library.hidden=true;player.hidden=false;window.scrollTo(0,0);
     }));
