@@ -1,1 +1,24 @@
-{"name":"ironclad-games","version":"1.0.0","private":true,"type":"module","scripts":{"test":"node --test tests/*.test.js","verify":"node scripts/verify-site.mjs","dev":"node scripts/serve.mjs"},"dependencies":{"@supabase/supabase-js":"2.118.0","esbuild":"0.28.2"}}
+{
+  "name": "ironclad-games",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "test": "node --test tests/*.test.js",
+    "verify": "node scripts/verify-site.mjs",
+    "dev": "node scripts/serve.mjs",
+    "build:browser": "node scripts/build-browser.mjs",
+    "dev:browser": "node scripts/serve-browser.mjs"
+  },
+  "dependencies": {
+    "@fastify/static": "9.3.0",
+    "@mercuryworkshop/bare-mux": "2.1.9",
+    "@mercuryworkshop/libcurl-transport": "1.5.2",
+    "@mercuryworkshop/scramjet": "1.1.0",
+    "@mercuryworkshop/wisp-js": "0.4.1",
+    "@supabase/supabase-js": "2.118.0",
+    "@titaniumnetwork-dev/ultraviolet": "3.2.10",
+    "esbuild": "0.28.2",
+    "fastify": "5.12.7"
+  }
+}
