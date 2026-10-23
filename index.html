@@ -8,14 +8,19 @@
   <meta name="description" content="Play driving, racing, and sports games on Ironclad Games.">
   <title>Ironclad Games</title>
   <link rel="icon" href="./assets/icon.svg" type="image/svg+xml">
-  <link rel="stylesheet" href="./assets/site.css?v=drive-1">
+  <link rel="stylesheet" href="./assets/site.css?v=tabs-1">
 </head>
 <body>
   <div class="site">
     <header class="header">
       <a class="brand" href="./" aria-label="Ironclad Games home">Ironclad<span>Games</span></a>
     </header>
+    <div class="browser-tabs" role="tablist" aria-label="Game tabs">
+      <button class="browser-tab" id="tab-1" role="tab" aria-selected="true" aria-controls="panel-1"><span class="tab-number">1</span><span class="tab-title">Games</span></button>
+      <button class="browser-tab" id="tab-2" role="tab" aria-selected="false" aria-controls="panel-2" tabindex="-1"><span class="tab-number">2</span><span class="tab-title">Games</span></button>
+    </div>
     <main id="main">
+      <div id="panel-1" role="tabpanel" aria-labelledby="tab-1">
       <section id="library-view">
         <div class="page-heading">
           <div><h1>Games</h1><p id="search-status" role="status" aria-live="polite">17 games</p></div>
@@ -103,11 +108,11 @@
         <div class="frame-container" id="frame-container"></div>
         <p id="player-message" role="status"></p>
       </section>
+      </div>
     </main>
   </div>
   <div class="desktop-notice"><h1>Ironclad Games</h1><p>Use a wider window to play.</p></div>
   <script>
-    const library=document.getElementById('library-view'),player=document.getElementById('player-view'),container=document.getElementById('frame-container'),message=document.getElementById('player-message');
     const games={
       'drive-mad':{title:'Drive Mad',src:'https://ubghyper.github.io/GameList.github.io/Drive-Mad/'},
       'moto-road-rash-3d':{title:'Moto Road Rash 3D',src:'https://class811.github.io/g7/moto-road-rash-3d/'},
@@ -127,28 +132,59 @@
       , 'ovo-2':{title:'OvO 2',src:'https://iogamesweb.com/play/ovo-2/'}
       , 'potato-league':{title:'Potato League',src:'https://itch.io/embed-upload/19853545?color=0b0b0b'}
     };
-    const search=document.getElementById('game-search'),clearSearch=document.getElementById('clear-search'),cards=[...document.querySelectorAll('.game-card')];
-    const searchableCards=cards.map(card=>({card,text:card.textContent.toLowerCase().replace(/\s+/g,' ')}));
-    function filterLibrary(){
-      const terms=search.value.trim().toLowerCase().split(/\s+/).filter(Boolean);let count=0;
-      searchableCards.forEach(({card,text})=>{const matches=terms.every(term=>text.includes(term));card.hidden=!matches;if(matches)count++;});
-      document.getElementById('search-status').textContent=count+' '+(count===1?'game':'games')+(terms.length?' found':'');
-      document.getElementById('search-empty').hidden=count!==0;clearSearch.hidden=search.value.length===0;
+    const firstPanel=document.getElementById('panel-1');
+    const secondPanel=firstPanel.cloneNode(true);
+    secondPanel.id='panel-2';secondPanel.hidden=true;secondPanel.setAttribute('aria-labelledby','tab-2');
+    secondPanel.querySelectorAll('[id]').forEach(element=>{element.id+='-tab2';});
+    secondPanel.querySelector('[aria-controls]').setAttribute('aria-controls','game-grid-tab2');
+    firstPanel.after(secondPanel);
+    const panels=[firstPanel,secondPanel],tabs=[...document.querySelectorAll('[role="tab"]')];
+    const scrollPositions=[0,0];let activeTab=0;
+    function selectTab(index){
+      if(index===activeTab)return;
+      scrollPositions[activeTab]=window.scrollY;activeTab=index;
+      panels.forEach((panel,i)=>{panel.hidden=i!==index;tabs[i].setAttribute('aria-selected',String(i===index));tabs[i].tabIndex=i===index?0:-1;});
+      window.scrollTo(0,scrollPositions[index]);
     }
-    search.addEventListener('input',filterLibrary);
-    function resetSearch(){search.value='';filterLibrary();search.focus();}
-    clearSearch.addEventListener('click',resetSearch);
-    search.addEventListener('keydown',event=>{if(event.key==='Escape'){event.preventDefault();resetSearch();}});
-    filterLibrary();
-    let activeButton=null;
-    document.querySelectorAll('[data-game]').forEach(button=>button.addEventListener('click',()=>{
-      const game=games[button.dataset.game];if(!game)return;activeButton=button;
-      const frame=document.createElement('iframe');frame.id='plyIframe';frame.title=game.title;frame.allow='fullscreen; autoplay; gamepad';frame.allowFullscreen=true;frame.sandbox='allow-scripts allow-same-origin allow-forms allow-pointer-lock';frame.referrerPolicy='strict-origin';
-      document.getElementById('game-title').textContent=game.title;message.textContent=`Loading ${game.title}...`;frame.addEventListener('load',()=>{message.textContent='';frame.focus();});
-      frame.src=game.src;container.replaceChildren(frame);library.hidden=true;player.hidden=false;window.scrollTo(0,0);
-    }));
-    document.getElementById('back-library').addEventListener('click',()=>{container.replaceChildren();player.hidden=true;library.hidden=false;activeButton?.focus();});
-    document.getElementById('fullscreen').addEventListener('click',async()=>{try{if(document.fullscreenElement)await document.exitFullscreen();else await container.requestFullscreen();container.querySelector('iframe')?.focus();}catch{message.textContent='Fullscreen is unavailable. You can keep playing here.';}});
+    tabs.forEach((tab,index)=>{
+      tab.addEventListener('click',()=>selectTab(index));
+      tab.addEventListener('keydown',event=>{
+        let next;if(event.key==='ArrowRight'||event.key==='ArrowLeft')next=1-index;
+        else if(event.key==='Home')next=0;else if(event.key==='End')next=1;else return;
+        event.preventDefault();selectTab(next);tabs[next].focus();
+      });
+    });
+    panels.forEach((panel,index)=>{
+      const find=id=>panel.querySelector('#'+id+(index?'-tab2':''));
+      const library=find('library-view'),player=find('player-view'),container=find('frame-container'),message=find('player-message');
+      const search=find('game-search'),clearSearch=find('clear-search'),cards=[...panel.querySelectorAll('.game-card')];
+      const searchableCards=cards.map(card=>({card,text:card.textContent.toLowerCase().replace(/\s+/g,' ')}));
+      function filterLibrary(){
+        const terms=search.value.trim().toLowerCase().split(/\s+/).filter(Boolean);let count=0;
+        searchableCards.forEach(({card,text})=>{const matches=terms.every(term=>text.includes(term));card.hidden=!matches;if(matches)count++;});
+        find('search-status').textContent=count+' '+(count===1?'game':'games')+(terms.length?' found':'');
+        find('search-empty').hidden=count!==0;clearSearch.hidden=search.value.length===0;
+      }
+      search.addEventListener('input',filterLibrary);
+      function resetSearch(){search.value='';filterLibrary();search.focus();}
+      clearSearch.addEventListener('click',resetSearch);
+      search.addEventListener('keydown',event=>{if(event.key==='Escape'){event.preventDefault();resetSearch();}});
+      filterLibrary();let activeButton=null;
+      panel.querySelectorAll('[data-game]').forEach(button=>button.addEventListener('click',()=>{
+        const game=games[button.dataset.game];if(!game)return;activeButton=button;
+        const frame=document.createElement('iframe');frame.id='plyIframe'+(index?'-tab2':'');frame.title=game.title;frame.allow='fullscreen; autoplay; gamepad';frame.allowFullscreen=true;frame.sandbox='allow-scripts allow-same-origin allow-forms allow-pointer-lock';frame.referrerPolicy='strict-origin';
+        find('game-title').textContent=game.title;tabs[index].querySelector('.tab-title').textContent=game.title;
+        message.textContent=`Loading ${game.title}...`;frame.addEventListener('load',()=>{message.textContent='';if(activeTab===index)frame.focus();});
+        frame.src=game.src;container.replaceChildren(frame);library.hidden=true;player.hidden=false;window.scrollTo(0,0);
+      }));
+      find('back-library').addEventListener('click',()=>{
+        container.replaceChildren();player.hidden=true;library.hidden=false;tabs[index].querySelector('.tab-title').textContent='Games';activeButton?.focus();
+      });
+      find('fullscreen').addEventListener('click',async()=>{
+        try{if(document.fullscreenElement)await document.exitFullscreen();else await container.requestFullscreen();container.querySelector('iframe')?.focus();}
+        catch{message.textContent='Fullscreen is unavailable. You can keep playing here.';}
+      });
+    });
   </script>
 </body>
 </html>
