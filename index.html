@@ -17,8 +17,11 @@
     </header>
     <main id="main">
       <section id="library-view">
-        <div class="page-heading"><h1>Games</h1></div>
-        <div class="game-grid">
+        <div class="page-heading">
+          <div><h1>Games</h1><p id="search-status" role="status" aria-live="polite">17 games</p></div>
+          <div role="search"><label class="search"><input type="search" id="game-search" aria-label="Search games" placeholder="Search games" autocomplete="off" aria-controls="game-grid"><button type="button" class="text-button" id="clear-search" aria-label="Clear search" hidden>Clear</button></label></div>
+        </div>
+        <div class="game-grid" id="game-grid">
           <article class="game-card">
             <div class="game-art" style="--card-bg:#191919;height:auto;aspect-ratio:1">
               <img src="./assets/drive-mad.png" alt="Drive Mad truck on a curved track" width="554" height="554" style="display:block;width:100%;height:100%;object-fit:cover" loading="lazy">
@@ -92,6 +95,7 @@
             <div class="game-content"><div class="game-title"><h2>Potato League</h2><span class="category">Sports</span></div><p>Boost, jump, and score in car soccer.</p><button class="play-button" id="play-potato" data-game="potato-league" aria-label="Play Potato League">Play</button></div>
           </article>
         </div>
+        <p class="empty-state" id="search-empty" hidden>No games found. Try another name or clear your search.</p>
       </section>
       <section id="player-view" hidden>
         <div class="player-heading"><button class="text-button" id="back-library">&larr; Games</button><span>Use the controls shown in the game.</span></div>
@@ -123,6 +127,19 @@
       , 'ovo-2':{title:'OvO 2',src:'https://iogamesweb.com/play/ovo-2/'}
       , 'potato-league':{title:'Potato League',src:'https://itch.io/embed-upload/19853545?color=0b0b0b'}
     };
+    const search=document.getElementById('game-search'),clearSearch=document.getElementById('clear-search'),cards=[...document.querySelectorAll('.game-card')];
+    const searchableCards=cards.map(card=>({card,text:card.textContent.toLowerCase().replace(/\s+/g,' ')}));
+    function filterLibrary(){
+      const terms=search.value.trim().toLowerCase().split(/\s+/).filter(Boolean);let count=0;
+      searchableCards.forEach(({card,text})=>{const matches=terms.every(term=>text.includes(term));card.hidden=!matches;if(matches)count++;});
+      document.getElementById('search-status').textContent=count+' '+(count===1?'game':'games')+(terms.length?' found':'');
+      document.getElementById('search-empty').hidden=count!==0;clearSearch.hidden=search.value.length===0;
+    }
+    search.addEventListener('input',filterLibrary);
+    function resetSearch(){search.value='';filterLibrary();search.focus();}
+    clearSearch.addEventListener('click',resetSearch);
+    search.addEventListener('keydown',event=>{if(event.key==='Escape'){event.preventDefault();resetSearch();}});
+    filterLibrary();
     let activeButton=null;
     document.querySelectorAll('[data-game]').forEach(button=>button.addEventListener('click',()=>{
       const game=games[button.dataset.game];if(!game)return;activeButton=button;
