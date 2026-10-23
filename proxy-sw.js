@@ -1,4 +1,7 @@
 // SPDX-License-Identifier: AGPL-3.0-only
+self.addEventListener('install',event=>event.waitUntil(self.skipWaiting()));
+self.addEventListener('activate',event=>event.waitUntil(self.clients.claim()));
+self.addEventListener('message',event=>{if(event.data?.type==='ironclad-activate')event.waitUntil(self.skipWaiting());});
 let scramjet,uv;
 importScripts('./browser-storage.js');
 let ScramjetWorker;try{importScripts('./vendor/scram/scramjet.all.js?v=storage-2');ScramjetWorker=$scramjetLoadWorker().ScramjetServiceWorker;}catch{}
@@ -9,7 +12,7 @@ try{importScripts('./vendor/uv/uv.bundle.js','./uv.config.js');importScripts(sel
 let scramjetReady;
 function prepareScramjet(){if(!scramjetReady){scramjet.config=undefined;scramjetReady=scramjet.loadConfig().catch(error=>{scramjetReady=null;throw error;});}return scramjetReady;}
 self.addEventListener('message',event=>{if(event.data?.scramjet$type==='loadConfig'){event.waitUntil(storageReady.then(()=>{if(scramjet){scramjetReady=null;return prepareScramjet();}}));}});
-self.addEventListener('install',()=>self.skipWaiting());self.addEventListener('activate',event=>event.waitUntil(self.clients.claim()));
+
 const root=new URL('./',self.location.href).pathname;
 function failureResponse(event,engine){
  if(event.request.mode!=='navigate'||!['iframe','document'].includes(event.request.destination))return new Response('Unable to load resource.',{status:502});
