@@ -83,6 +83,10 @@
             <div class="game-art" style="--card-bg:#191919;height:auto;aspect-ratio:1"><img src="./assets/moto-x3m-winter.png" alt="Moto X3M Winter" width="300" height="300" style="display:block;width:100%;height:100%;object-fit:cover" loading="lazy"></div>
             <div class="game-content"><div class="game-title"><h2>Moto X3M Winter</h2><span class="category">Racing</span></div><p>Ride through snowy tracks and winter stunts.</p><button class="play-button" id="play-moto-x3m-winter" data-game="moto-x3m-winter" aria-label="Play Moto X3M Winter">Play</button></div>
           </article>
+          <article class="game-card">
+            <div class="game-art" style="--card-bg:#fff;height:auto;aspect-ratio:1"><img src="./assets/ovo-2.png" alt="OvO 2" width="224" height="224" style="display:block;width:100%;height:100%;object-fit:cover" loading="lazy"></div>
+            <div class="game-content"><div class="game-title"><h2>OvO 2</h2><span class="category">Platformer</span></div><p>Jump and slide through a new set of platforming challenges.</p><button class="play-button" id="play-ovo-2" data-game="ovo-2" aria-label="Play OvO 2">Play</button></div>
+          </article>
         </div>
       </section>
       <section id="player-view" hidden>
@@ -112,6 +116,7 @@
       "eggy-car":{"title": "Eggy Car", "src": "https://class811.github.io/g/eggy-car/"},
       "moto-x3m-2":{"title": "Moto X3M 2", "src": "https://class811.github.io/g8/moto-x3m-2/"},
       "moto-x3m-winter":{"title": "Moto X3M Winter", "src": "https://class811.github.io/g/moto-x3m-winter/"}
+      , 'ovo-2':{title:'OvO 2',src:'https://iogamesweb.com/play/ovo-2/'}
     };
     let activeButton=null;
     document.querySelectorAll('[data-game]').forEach(button=>button.addEventListener('click',()=>{
