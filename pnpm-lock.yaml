@@ -35,6 +35,12 @@ importers:
       fastify:
         specifier: 5.12.7
         version: 5.12.7
+      ipaddr.js:
+        specifier: 2.3.0
+        version: 2.3.0
+      ws:
+        specifier: 8.22.0
+        version: 8.22.0(bufferutil@4.1.0)
     devDependencies:
       fake-indexeddb:
         specifier: 6.2.4
@@ -445,6 +451,10 @@ packages:
     resolution: {integrity: sha512-fOCG6lhoKKakwv+C6KdsOnGvgXnmgfmp0myi3bcNwj3qfwPAxRKWEuFhvEFF7ceYIz6+1jRZ+yguLFAmUNPEfw==}
     engines: {node: ^12.20.0 || ^14.13.1 || >=16.0.0}
 
+  ipaddr.js@2.3.0:
+    resolution: {integrity: sha512-Zv/pA+ciVFbCSBBjGfaKUya/CcGmUHzTydLMaTwrUUEM2DIEO3iZvueGxmacvmN50fGpGVKeTXpb2LcYQxeVdg==}
+    engines: {node: '>= 10'}
+
   ipaddr.js@2.5.0:
     resolution: {integrity: sha512-aq+t5NAc+cS6rZQQVWC2x98CPqGtKKTMDd4Gaodv0wShnItdKg/51djkGJ1hqH+Oy0ivDftCbSLCQob8zso01w==}
     engines: {node: '>= 10'}
@@ -601,6 +611,18 @@ packages:
 
   tslib@2.8.1:
     resolution: {integrity: sha512-oJFu94HQb+KVduSUQL7wnpmqnfmLsOA/nAh6b6EH0wCEoK0/mPeXU6c3wKDV83MkOuHPRHtSXKKU99IBazS/2w==}
+
+  ws@8.19.0:
+    resolution: {integrity: sha512-blAT2mjOEIi0ZzruJfIhb3nps74PRWTCz1IjglWEEpQl5XS/UNama6u2/rjFkDDouqr4L67ry+1aGIALViWjDg==}
+    engines: {node: '>=10.0.0'}
+    peerDependencies:
+      bufferutil: ^4.0.1
+      utf-8-validate: '>=5.0.2'
+    peerDependenciesMeta:
+      bufferutil:
+        optional: true
+      utf-8-validate:
+        optional: true
 
   ws@8.22.0:
     resolution: {integrity: sha512-Ydggc987+RO0AnWtZ/7Wq9FtNvcrL1b/RO0ud9mWjUPgDrsAAwQSF51sm2hm1XofbU/4jkpGEsLFsZZxU+1DOg==}
@@ -762,7 +784,7 @@ snapshots:
       bufferutil: 4.1.0
       commander: 14.0.3
       ipaddr.js: 2.5.0
-      ws: 8.22.0(bufferutil@4.1.0)
+      ws: 8.19.0(bufferutil@4.1.0)
     transitivePeerDependencies:
       - utf-8-validate
 
@@ -997,6 +1019,8 @@ snapshots:
 
   ip-regex@5.0.0: {}
 
+  ipaddr.js@2.3.0: {}
+
   ipaddr.js@2.5.0: {}
 
   is-ip@5.0.1:
@@ -1127,6 +1151,10 @@ snapshots:
   toidentifier@1.0.1: {}
 
   tslib@2.8.1: {}
+
+  ws@8.19.0(bufferutil@4.1.0):
+    optionalDependencies:
+      bufferutil: 4.1.0
 
   ws@8.22.0(bufferutil@4.1.0):
     optionalDependencies:
