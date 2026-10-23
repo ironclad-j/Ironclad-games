@@ -35,6 +35,10 @@
             <div class="game-art" style="--card-bg:#518d22;height:auto;aspect-ratio:1"><img src="./assets/retro-bowl.png" alt="Retro Bowl football player" width="400" height="400" style="display:block;width:100%;height:100%;object-fit:cover" loading="lazy"></div>
             <div class="game-content"><div class="game-title"><h2>Retro Bowl</h2><span class="category">Sports</span></div><p>Build your team and lead it to the championship.</p><button class="play-button" id="play-retro" data-game="retro-bowl" aria-label="Play Retro Bowl">Play</button></div>
           </article>
+          <article class="game-card">
+            <div class="game-art" style="--card-bg:#191919;height:auto;aspect-ratio:1"><img src="https://class811.github.io/img/big-shot-boxing.png" alt="Big Shot Boxing" width="400" height="400" style="display:block;width:100%;height:100%;object-fit:cover" loading="lazy"></div>
+            <div class="game-content"><div class="game-title"><h2>Big Shot Boxing</h2><span class="category">Sports</span></div><p>Step into the ring and fight your way to the top.</p><button class="play-button" id="play-boxing" data-game="big-shot-boxing" aria-label="Play Big Shot Boxing">Play</button></div>
+          </article>
         </div>
       </section>
       <section id="player-view" hidden>
@@ -51,7 +55,8 @@
     const games={
       'drive-mad':{title:'Drive Mad',src:'https://ubghyper.github.io/GameList.github.io/Drive-Mad/'},
       'moto-road-rash-3d':{title:'Moto Road Rash 3D',src:'https://class811.github.io/g7/moto-road-rash-3d/'},
-      'retro-bowl':{title:'Retro Bowl',src:'https://class811.github.io/g/retro-bowl/'}
+      'retro-bowl':{title:'Retro Bowl',src:'https://class811.github.io/g/retro-bowl/'},
+      'big-shot-boxing':{title:'Big Shot Boxing',src:'https://class811.github.io/g2/big-shot-boxing/'}
     };
     let activeButton=null;
     document.querySelectorAll('[data-game]').forEach(button=>button.addEventListener('click',()=>{
