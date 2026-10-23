@@ -104,3 +104,11 @@ main{max-width:1120px;margin:auto;padding:28px 40px 44px;min-height:calc(100vh -
 .site-heading .brand{font-size:19px}
 .frame-container{height:min(620px,calc(100vh - 340px))}
 @media(min-width:960px) and (max-width:1100px){.site{padding:0}main{padding-left:32px;padding-right:32px}.browser-wordmark{display:none}.browser-toolbar-name{display:none}}
+
+.browser-tabs{flex:0 1 auto;min-width:0;overflow-x:auto;scrollbar-width:thin;scrollbar-color:#444 transparent}
+.browser-tab-shell{position:relative;flex:0 0 220px;min-width:0;display:flex}
+.browser-tab-shell .browser-tab{width:100%;padding-right:38px}
+.close-tab{position:absolute;right:9px;top:9px;border:0;background:none;border-radius:4px;color:#999;width:23px;height:23px;padding:0;font-size:19px;line-height:1}
+.close-tab:hover{color:#eee;background:#444}
+.new-tab{align-self:center;flex-shrink:0;width:30px;height:30px;margin:0 0 5px -15px;border:0;border-radius:6px;background:none;color:#bbb;font-size:23px;line-height:1}
+.new-tab:hover{background:#292929;color:white}
