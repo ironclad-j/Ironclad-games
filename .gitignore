@@ -3,3 +3,8 @@ node_modules/
 work/
 config.local.js
 .env*
+
+vendor/
+assets/browser.js
+
+licenses/
