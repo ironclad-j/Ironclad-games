@@ -47,6 +47,10 @@
             <div class="game-art" style="--card-bg:#191919;height:auto;aspect-ratio:1"><img src="./assets/drift-hunters.png" alt="Drift Hunters green drift car" width="300" height="300" style="display:block;width:100%;height:100%;object-fit:cover" loading="lazy"></div>
             <div class="game-content"><div class="game-title"><h2>Drift Hunters</h2><span class="category">Racing</span></div><p>Tune your car and build your best drift.</p><button class="play-button" id="play-drift" data-game="drift-hunters" aria-label="Play Drift Hunters">Play</button></div>
           </article>
+          <article class="game-card">
+            <div class="game-art" style="--card-bg:#fff;height:auto;aspect-ratio:1"><img src="./assets/snow-rider-3d.png" alt="Snow Rider 3D" width="300" height="300" style="display:block;width:100%;height:100%;object-fit:cover" loading="lazy"></div>
+            <div class="game-content"><div class="game-title"><h2>Snow Rider 3D</h2><span class="category">Arcade</span></div><p>Ride the slopes and steer clear of obstacles.</p><button class="play-button" id="play-snow" data-game="snow-rider-3d" aria-label="Play Snow Rider 3D">Play</button></div>
+          </article>
         </div>
       </section>
       <section id="player-view" hidden>
@@ -66,7 +70,8 @@
       'retro-bowl':{title:'Retro Bowl',src:'https://class811.github.io/g/retro-bowl/'},
       'big-shot-boxing':{title:'Big Shot Boxing',src:'https://class811.github.io/g2/big-shot-boxing/'},
       'slope':{title:'Slope',src:'https://class811.github.io/g/slope/'},
-      'drift-hunters':{title:'Drift Hunters',src:'https://class811.github.io/g/drift-hunters/'}
+      'drift-hunters':{title:'Drift Hunters',src:'https://class811.github.io/g/drift-hunters/'},
+      'snow-rider-3d':{title:'Snow Rider 3D',src:'https://class811.github.io/g8/snow-rider-3d/'}
     };
     let activeButton=null;
     document.querySelectorAll('[data-game]').forEach(button=>button.addEventListener('click',()=>{
