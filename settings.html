@@ -10,7 +10,7 @@
 </form>
 <section class="setting-section engine-credits"><h2>Open-source projects</h2><p><a href="https://github.com/MercuryWorkshop/scramjet" target="_blank" rel="noopener">Scramjet</a> · <a href="https://github.com/titaniumnetwork-dev/Ultraviolet" target="_blank" rel="noopener">Ultraviolet</a> · <a href="https://github.com/MercuryWorkshop/bare-mux" target="_blank" rel="noopener">BareMux</a> · <a href="https://github.com/MercuryWorkshop/wisp-js" target="_blank" rel="noopener">Wisp</a></p><a href="./licenses.html">Licenses and source</a></section>
 </div><script type="module">
-import {getSettings,saveSettings} from './assets/browser.js';
+import {getSettings,saveSettings} from './assets/browser.js?v=storage-2';
 const preferred=document.getElementById('preferred-engine'),automatic=document.getElementById('automatic-fallback'),endpoint=document.getElementById('wisp-endpoint'),status=document.getElementById('settings-status');
 function show(settings){preferred.value=settings.preferred;automatic.checked=settings.automatic;endpoint.value=settings.endpoint;document.getElementById('connection-note').textContent=settings.endpoint?'Server address configured. Availability is checked when browsing.':'No public browsing server is connected. Games and widgets still work.';}
 show(getSettings());document.getElementById('browser-settings').addEventListener('submit',event=>{event.preventDefault();try{show(saveSettings({preferred:preferred.value,automatic:automatic.checked,endpoint:endpoint.value}));status.textContent='Settings saved.';}catch(error){status.textContent=error.message;}});

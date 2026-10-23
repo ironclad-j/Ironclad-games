@@ -23,9 +23,11 @@ async function setup(endpoint){
  if(!endpoint)throw Error('Add a browsing server in Settings. The public site does not have a server connected yet.');
  if(!navigator.serviceWorker)throw Error('This browser does not support the required service worker.');
  if(!setupPromise)setupPromise=(async()=>{
+  await loadScript('browser-storage.js');await ensureIroncladStorage();
   await loadScript('vendor/baremux/index.js');
   const registration=await navigator.serviceWorker.register(asset('proxy-sw.js'),{scope:base.pathname,updateViaCache:'none'});
   await registration.update();await navigator.serviceWorker.ready;
+  const activate=()=>registration.waiting?.postMessage({type:'ironclad-activate'});activate();registration.addEventListener('updatefound',()=>registration.installing?.addEventListener('statechange',activate));
   if(!navigator.serviceWorker.controller)await new Promise((resolve,reject)=>{const timer=setTimeout(()=>reject(Error('Browser worker did not start. Reload and try again.')),10000);navigator.serviceWorker.addEventListener('controllerchange',()=>{clearTimeout(timer);resolve();},{once:true});});
   connection=new BareMux.BareMuxConnection(asset('vendor/baremux/worker.js'));
  })().catch(error=>{setupPromise=null;throw error;});
@@ -33,8 +35,8 @@ async function setup(endpoint){
 }
 async function scramjetController(){
  if(!controllerPromise)controllerPromise=(async()=>{
-  await loadScript('vendor/scram/scramjet.all.js');const {ScramjetController}=$scramjetLoadController();
-  const controller=new ScramjetController({prefix:base.pathname+'browser/scramjet/',files:{wasm:base.pathname+'vendor/scram/scramjet.wasm.wasm',all:base.pathname+'vendor/scram/scramjet.all.js',sync:base.pathname+'vendor/scram/scramjet.sync.js'}});
+  await loadScript('vendor/scram/scramjet.all.js?v=storage-2');const {ScramjetController}=$scramjetLoadController();
+  const controller=new ScramjetController({prefix:base.pathname+'browser/scramjet/',files:{wasm:base.pathname+'vendor/scram/scramjet.wasm.wasm',all:base.pathname+'vendor/scram/scramjet.all.js?v=storage-2',sync:base.pathname+'vendor/scram/scramjet.sync.js'}});
   await controller.init();return controller;
  })().catch(error=>{controllerPromise=null;throw error;});return controllerPromise;
 }

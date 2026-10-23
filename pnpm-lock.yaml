@@ -35,6 +35,10 @@ importers:
       fastify:
         specifier: 5.12.7
         version: 5.12.7
+    devDependencies:
+      fake-indexeddb:
+        specifier: 6.2.4
+        version: 6.2.4
 
 packages:
 
@@ -376,6 +380,10 @@ packages:
   events@3.3.0:
     resolution: {integrity: sha512-mQw+2fkQbALzQ7V0MY0IqdnXNOeTtP4r0lN9z7AAawCXgqea7bDii20AYrIBrFd/Hx0M2Ocz6S111CaFkUcb0Q==}
     engines: {node: '>=0.8.x'}
+
+  fake-indexeddb@6.2.4:
+    resolution: {integrity: sha512-INKeIKEtSViN4yVtEWEUqbsqmaIy7Ls+MfU0yxQVXg67pOJ/sH1ZxcVrP8XrKULUFohcPD9gnmym+qBfEybACw==}
+    engines: {node: '>=18'}
 
   fast-decode-uri-component@1.0.1:
     resolution: {integrity: sha512-WKgKWg5eUxvRZGwW8FvfbaH7AXSh2cL+3j5fMGzUMCxWBJ3dV3a7Wz8y2f/uQ0e3B6WmodD3oS54jTQ9HVTIIg==}
@@ -904,6 +912,8 @@ snapshots:
   escape-html@1.0.3: {}
 
   events@3.3.0: {}
+
+  fake-indexeddb@6.2.4: {}
 
   fast-decode-uri-component@1.0.1: {}
 
