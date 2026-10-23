@@ -72,3 +72,11 @@ dialog p{font-size:13px;color:var(--muted);line-height:1.6}
 @media(max-width:1100px){.site{padding:0 32px}.header{gap:38px}.game-grid,.records-grid{gap:16px}.game-art{height:170px}.game-content{padding:17px}.sync-status{max-width:250px;font-size:10px}}
 @media(max-width:959px){.site{display:none}.desktop-notice{display:block;padding:15vh 10vw;max-width:580px}.desktop-notice h1{font-size:30px}.desktop-notice p{color:var(--muted);line-height:1.7}}
 
+
+.browser-tabs{display:flex;gap:6px;padding-top:18px;border-bottom:1px solid var(--line)}
+.browser-tab{display:flex;align-items:center;gap:10px;width:220px;min-width:0;padding:12px 16px;border:1px solid transparent;border-bottom:0;border-radius:9px 9px 0 0;background:transparent;color:var(--muted);text-align:left;font-size:13px}
+.browser-tab:hover{background:#151515;color:var(--ink)}
+.browser-tab[aria-selected="true"]{background:#202020;border-color:var(--line);color:var(--ink);box-shadow:0 1px #202020}
+.tab-number{font-size:10px;border:1px solid #444;border-radius:4px;width:19px;height:19px;text-align:center;flex-shrink:0;color:var(--muted)}
+.tab-title{overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+[id^="player-message"]{min-height:18px;font-size:12px;color:var(--muted);margin:14px 0 0}
