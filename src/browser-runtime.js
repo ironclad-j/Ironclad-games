@@ -25,10 +25,10 @@ async function setup(endpoint){
  if(!setupPromise)setupPromise=(async()=>{
   await loadScript('browser-storage.js');await ensureIroncladStorage();
   await loadScript('vendor/baremux/index.js');
-  const registration=await navigator.serviceWorker.register(asset('proxy-sw.js?v=storage-2'),{scope:base.pathname,updateViaCache:'none'});
+  const registration=await navigator.serviceWorker.register(asset('proxy-sw.js'),{scope:base.pathname,updateViaCache:'none'});
   await registration.update();await navigator.serviceWorker.ready;
   const activate=()=>registration.waiting?.postMessage({type:'ironclad-activate'});activate();registration.addEventListener('updatefound',()=>registration.installing?.addEventListener('statechange',activate));
-  if(navigator.serviceWorker.controller?.scriptURL!==asset('proxy-sw.js?v=storage-2'))await new Promise((resolve,reject)=>{const changed=()=>{if(navigator.serviceWorker.controller?.scriptURL===asset('proxy-sw.js?v=storage-2')){clearTimeout(timer);navigator.serviceWorker.removeEventListener('controllerchange',changed);resolve();}};const timer=setTimeout(()=>{navigator.serviceWorker.removeEventListener('controllerchange',changed);reject(Error('Browser worker update did not start. Reload and try again.'));},10000);navigator.serviceWorker.addEventListener('controllerchange',changed);changed();});
+  if(!navigator.serviceWorker.controller)await new Promise((resolve,reject)=>{const timer=setTimeout(()=>reject(Error('Browser worker did not start. Reload and try again.')),10000);navigator.serviceWorker.addEventListener('controllerchange',()=>{clearTimeout(timer);resolve();},{once:true});});
   connection=new BareMux.BareMuxConnection(asset('vendor/baremux/worker.js'));
  })().catch(error=>{setupPromise=null;throw error;});
  await setupPromise;await connection.setTransport(asset('vendor/libcurl/index.mjs'),[{websocket:endpoint}]);
