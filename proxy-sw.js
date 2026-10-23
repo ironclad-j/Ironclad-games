@@ -1,12 +1,14 @@
 // SPDX-License-Identifier: AGPL-3.0-only
 let scramjet,uv;
-try{importScripts('./vendor/scram/scramjet.all.js');const {ScramjetServiceWorker}=$scramjetLoadWorker();scramjet=new ScramjetServiceWorker();}catch{}
+importScripts('./browser-storage.js');
+let ScramjetWorker;try{importScripts('./vendor/scram/scramjet.all.js?v=storage-2');ScramjetWorker=$scramjetLoadWorker().ScramjetServiceWorker;}catch{}
+const storageReady=ensureIroncladStorage().then(()=>{if(ScramjetWorker)scramjet=new ScramjetWorker();});
 try{importScripts('./vendor/uv/uv.bundle.js','./uv.config.js');importScripts(self.__uv$config.sw);uv=new UVServiceWorker();}catch{}
 // Version 1's controller message sets instance.config before initializing the
 // shared rewriter. Read the persisted config once to initialize both together.
 let scramjetReady;
 function prepareScramjet(){if(!scramjetReady){scramjet.config=undefined;scramjetReady=scramjet.loadConfig().catch(error=>{scramjetReady=null;throw error;});}return scramjetReady;}
-self.addEventListener('message',event=>{if(event.data?.scramjet$type==='loadConfig'&&scramjet){scramjetReady=null;event.waitUntil(prepareScramjet());}});
+self.addEventListener('message',event=>{if(event.data?.scramjet$type==='loadConfig'){event.waitUntil(storageReady.then(()=>{if(scramjet){scramjetReady=null;return prepareScramjet();}}));}});
 self.addEventListener('install',()=>self.skipWaiting());self.addEventListener('activate',event=>event.waitUntil(self.clients.claim()));
 const root=new URL('./',self.location.href).pathname;
 function failureResponse(event,engine){
@@ -21,7 +23,7 @@ self.addEventListener('fetch',event=>{
  const engine=pathname.startsWith(root+'browser/scramjet/')||pathname===root+'vendor/scram/scramjet.wasm.wasm'?'scramjet':pathname.startsWith(root+'browser/uv/')?'ultraviolet':null;
  if(!engine)return;
  event.respondWith((async()=>{try{
-  let response;if(engine==='scramjet'){await prepareScramjet();response=await scramjet.fetch(event);}else response=await uv.fetch(event);
+  let response;if(engine==='scramjet'){await storageReady;await prepareScramjet();response=await scramjet.fetch(event);}else response=await uv.fetch(event);
   if(response.status>=500)return failureResponse(event,engine);return response;
  }catch{return failureResponse(event,engine);}})());
 });
