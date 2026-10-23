@@ -8,18 +8,29 @@
   <meta name="description" content="Play driving, racing, and sports games on Ironclad Games.">
   <title>Ironclad Games</title>
   <link rel="icon" href="./assets/icon.svg" type="image/svg+xml">
-  <link rel="stylesheet" href="./assets/site.css?v=tabs-1">
+  <link rel="stylesheet" href="./assets/site.css?v=browser-2">
 </head>
 <body>
   <div class="site">
-    <header class="header">
-      <a class="brand" href="./" aria-label="Ironclad Games home">Ironclad<span>Games</span></a>
+    <header class="browser-chrome">
+      <div class="browser-topline">
+        <span class="browser-wordmark">IRONCLAD</span>
+        <div class="browser-tabs" role="tablist" aria-label="Game tabs">
+          <button class="browser-tab" id="tab-1" role="tab" aria-selected="true" aria-controls="panel-1"><img src="./assets/icon.svg" alt="" width="16" height="16"><span class="tab-title">Games</span><span class="tab-number">1</span></button>
+          <button class="browser-tab" id="tab-2" role="tab" aria-selected="false" aria-controls="panel-2" tabindex="-1"><img src="./assets/icon.svg" alt="" width="16" height="16"><span class="tab-title">Games</span><span class="tab-number">2</span></button>
+        </div>
+      </div>
+      <div class="browser-toolbar" role="toolbar" aria-label="Browser navigation">
+        <button class="browser-control" id="browser-back" aria-label="Go back" title="Back" disabled>&larr;</button>
+        <button class="browser-control" id="browser-forward" aria-label="Go forward" title="Forward" disabled>&rarr;</button>
+        <button class="browser-control" id="browser-reload" aria-label="Reload current game" title="Reload current game">&#8635;</button>
+        <button class="browser-control" id="browser-home" aria-label="Open game library" title="Home">&#8962;</button>
+        <div class="browser-address"><span aria-hidden="true">&#9672;</span><input id="browser-address" aria-label="Current Ironclad page" value="ironclad://games" readonly spellcheck="false"></div>
+        <span class="browser-toolbar-name">Ironclad Games</span>
+      </div>
     </header>
-    <div class="browser-tabs" role="tablist" aria-label="Game tabs">
-      <button class="browser-tab" id="tab-1" role="tab" aria-selected="true" aria-controls="panel-1"><span class="tab-number">1</span><span class="tab-title">Games</span></button>
-      <button class="browser-tab" id="tab-2" role="tab" aria-selected="false" aria-controls="panel-2" tabindex="-1"><span class="tab-number">2</span><span class="tab-title">Games</span></button>
-    </div>
     <main id="main">
+      <div class="site-heading"><a class="brand" href="./" aria-label="Ironclad Games home">Ironclad<span>Games</span></a></div>
       <div id="panel-1" role="tabpanel" aria-labelledby="tab-1">
       <section id="library-view">
         <div class="page-heading">
@@ -139,12 +150,22 @@
     secondPanel.querySelector('[aria-controls]').setAttribute('aria-controls','game-grid-tab2');
     firstPanel.after(secondPanel);
     const panels=[firstPanel,secondPanel],tabs=[...document.querySelectorAll('[role="tab"]')];
-    const scrollPositions=[0,0];let activeTab=0;
+    const scrollPositions=[0,0],controllers=[];let activeTab=0;
+    const back=document.getElementById('browser-back'),forward=document.getElementById('browser-forward'),address=document.getElementById('browser-address');
+    function updateToolbar(){
+      const current=controllers[activeTab];if(!current)return;
+      back.disabled=!current.isPlaying();forward.disabled=current.isPlaying()||!current.hasGame();
+      address.value=current.isPlaying()?'ironclad://play/'+current.gameId():'ironclad://games';
+    }
+    back.addEventListener('click',()=>controllers[activeTab].showLibrary());
+    forward.addEventListener('click',()=>controllers[activeTab].showGame());
+    document.getElementById('browser-home').addEventListener('click',()=>controllers[activeTab].showLibrary());
+    document.getElementById('browser-reload').addEventListener('click',()=>controllers[activeTab].reload());
     function selectTab(index){
       if(index===activeTab)return;
       scrollPositions[activeTab]=window.scrollY;activeTab=index;
       panels.forEach((panel,i)=>{panel.hidden=i!==index;tabs[i].setAttribute('aria-selected',String(i===index));tabs[i].tabIndex=i===index?0:-1;});
-      window.scrollTo(0,scrollPositions[index]);
+      window.scrollTo(0,scrollPositions[index]);updateToolbar();
     }
     tabs.forEach((tab,index)=>{
       tab.addEventListener('click',()=>selectTab(index));
@@ -169,22 +190,34 @@
       function resetSearch(){search.value='';filterLibrary();search.focus();}
       clearSearch.addEventListener('click',resetSearch);
       search.addEventListener('keydown',event=>{if(event.key==='Escape'){event.preventDefault();resetSearch();}});
-      filterLibrary();let activeButton=null;
+      filterLibrary();let activeButton=null,currentGame=null;
+      function showLibrary(){
+        player.hidden=true;library.hidden=false;tabs[index].querySelector('.tab-title').textContent='Games';updateToolbar();
+      }
+      function showGame(){
+        if(!currentGame)return;
+        library.hidden=true;player.hidden=false;tabs[index].querySelector('.tab-title').textContent=games[currentGame].title;updateToolbar();window.scrollTo(0,0);
+      }
+      controllers.push({showLibrary,showGame,isPlaying:()=>!player.hidden,hasGame:()=>Boolean(currentGame),gameId:()=>currentGame,reload:()=>{
+        const frame=container.querySelector('iframe');if(!player.hidden&&frame){message.textContent=`Loading ${games[currentGame].title}...`;frame.src=games[currentGame].src;}
+        else{resetSearch();window.scrollTo(0,0);}
+      }});
       panel.querySelectorAll('[data-game]').forEach(button=>button.addEventListener('click',()=>{
-        const game=games[button.dataset.game];if(!game)return;activeButton=button;
+        const game=games[button.dataset.game];if(!game)return;activeButton=button;currentGame=button.dataset.game;
         const frame=document.createElement('iframe');frame.id='plyIframe'+(index?'-tab2':'');frame.title=game.title;frame.allow='fullscreen; autoplay; gamepad';frame.allowFullscreen=true;frame.sandbox='allow-scripts allow-same-origin allow-forms allow-pointer-lock';frame.referrerPolicy='strict-origin';
         find('game-title').textContent=game.title;tabs[index].querySelector('.tab-title').textContent=game.title;
         message.textContent=`Loading ${game.title}...`;frame.addEventListener('load',()=>{message.textContent='';if(activeTab===index)frame.focus();});
-        frame.src=game.src;container.replaceChildren(frame);library.hidden=true;player.hidden=false;window.scrollTo(0,0);
+        frame.src=game.src;container.replaceChildren(frame);showGame();
       }));
       find('back-library').addEventListener('click',()=>{
-        container.replaceChildren();player.hidden=true;library.hidden=false;tabs[index].querySelector('.tab-title').textContent='Games';activeButton?.focus();
+        showLibrary();activeButton?.focus();
       });
       find('fullscreen').addEventListener('click',async()=>{
         try{if(document.fullscreenElement)await document.exitFullscreen();else await container.requestFullscreen();container.querySelector('iframe')?.focus();}
         catch{message.textContent='Fullscreen is unavailable. You can keep playing here.';}
       });
     });
+    updateToolbar();
   </script>
 </body>
 </html>
