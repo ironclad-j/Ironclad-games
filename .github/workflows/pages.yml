@@ -30,7 +30,7 @@ jobs:
         run: |
           mkdir -p dist/assets
           cp index.html dist/
-          cp assets/site.css assets/icon.svg assets/drive-mad.png assets/retro-bowl.png assets/slope.png dist/assets/
+          cp assets/site.css assets/icon.svg assets/drive-mad.png assets/retro-bowl.png assets/slope.png assets/drift-hunters.png dist/assets/
           touch dist/.nojekyll
       - uses: actions/upload-pages-artifact@v3
         with:
