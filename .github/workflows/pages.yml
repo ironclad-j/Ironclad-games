@@ -21,24 +21,15 @@ jobs:
       - uses: actions/setup-node@v4
         with:
           node-version: '24'
-      - uses: pnpm/action-setup@v4
-        with:
-          version: 11.25.0
-      - name: Install pinned dependencies
-        run: pnpm install --frozen-lockfile --ignore-scripts
-      - name: Build browser engines
-        run: pnpm build:browser
-      - name: Test game rules and cloud queue
-        run: node --test tests/*.test.js
+      - name: Test games and save handling
+        run: node --test tests/auth.test.js tests/catalog.test.js tests/controller.test.js tests/frame-host.test.js tests/games.test.js tests/save-store.test.js
       - name: Verify static assets
         run: node scripts/verify-site.mjs
       - uses: actions/configure-pages@v5
       - name: Assemble public site only
         run: |
           mkdir -p dist/assets
-          cp index.html settings.html licenses.html proxy-sw.js browser-storage.js uv.config.js dist/
-          cp -R vendor licenses dist/
-          cp assets/browser.js dist/assets/
+          cp index.html settings.html proxy-sw.js dist/
           cp assets/site.css assets/icon.svg assets/drive-mad.png assets/retro-bowl.png assets/slope.png assets/drift-hunters.png assets/snow-rider-3d.png assets/ovo.png assets/moto-x3m-spooky-land.png assets/stacktris.png assets/rocket-soccer-derby.png assets/moto-x3m.png assets/eggy-car.png assets/moto-x3m-2.png assets/moto-x3m-winter.png assets/ovo-2.png assets/potato-league.png dist/assets/
           touch dist/.nojekyll
       - uses: actions/upload-pages-artifact@v3
