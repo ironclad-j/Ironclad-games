@@ -10,6 +10,6 @@ test("Eggy Car has the supplied source",()=>{const game=catalog.find(g=>g.id==="
 test("Moto X3M 2 has the supplied source",()=>{const game=catalog.find(g=>g.id==="moto-x3m-2");assert.equal(game?.frameUrl,"https://class811.github.io/g8/moto-x3m-2/");assert.equal(game?.title,"Moto X3M 2");});
 test("Moto X3M Winter has the supplied source",()=>{const game=catalog.find(g=>g.id==="moto-x3m-winter");assert.equal(game?.frameUrl,"https://class811.github.io/g/moto-x3m-winter/");assert.equal(game?.title,"Moto X3M Winter");});
 
-test("OvO 2 uses the supplied source",()=>{assert.equal(catalog.find(g=>g.id==="ovo-2")?.frameUrl,"https://iogamesweb.com/play/ovo-2/");});
+test("OvO 2 uses the supplied source",()=>{assert.equal(catalog.find(g=>g.id==="ovo-2")?.frameUrl,"https://ubg98.github.io/OvO2/");});
 
 test("Potato League uses the official playable embed",()=>{assert.equal(catalog.find(g=>g.id==="potato-league")?.frameUrl,"https://itch.io/embed-upload/19853545?color=0b0b0b");});
