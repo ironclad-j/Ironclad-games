@@ -30,7 +30,7 @@ jobs:
         run: |
           mkdir -p dist/assets
           cp index.html settings.html proxy-sw.js dist/
-          cp assets/site.css assets/icon.svg assets/drive-mad.png assets/retro-bowl.png assets/slope.png assets/drift-hunters.png assets/snow-rider-3d.png assets/ovo.png assets/moto-x3m-spooky-land.png assets/stacktris.png assets/rocket-soccer-derby.png assets/moto-x3m.png assets/eggy-car.png assets/moto-x3m-2.png assets/moto-x3m-winter.png assets/ovo-2.png assets/potato-league.png dist/assets/
+          cp assets/site.css assets/icon.svg assets/drive-mad.png assets/retro-bowl.png assets/slope.png assets/drift-hunters.png assets/snow-rider-3d.png assets/ovo.png assets/moto-x3m-spooky-land.png assets/stacktris.png assets/rocket-soccer-derby.png assets/moto-x3m.png assets/eggy-car.png assets/moto-x3m-2.png assets/moto-x3m-winter.png assets/ovo-2.png assets/potato-league.png assets/stack.png assets/level-devil.png assets/highway-traffic.png assets/rush-race-motocross.png assets/getaway-shootout.png assets/rooftop-snipers.png assets/tag.png assets/stickman-hook.png assets/flappy-bird.png assets/basket-bros.png assets/super-mario-bros.png dist/assets/
           touch dist/.nojekyll
       - uses: actions/upload-pages-artifact@v3
         with:
