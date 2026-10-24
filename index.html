@@ -5,65 +5,16 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta name="theme-color" content="#0b0b0b">
   <meta name="color-scheme" content="dark">
-  <meta name="description" content="Search the web with DuckDuckGo and play games on Ironclad.">
+  <meta name="description" content="Play games on Ironclad Games.">
   <title>Ironclad Games</title>
   <link rel="icon" href="./assets/icon.svg" type="image/svg+xml">
-  <link rel="stylesheet" href="./assets/site.css?v=engines-1">
+  <link rel="stylesheet" href="./assets/site.css?v=arcade-1">
 </head>
 <body>
   <div class="site">
-    <header class="browser-chrome">
-      <div class="browser-topline">
-        <span class="browser-wordmark">IRONCLAD</span>
-        <div class="browser-tabs" role="tablist" aria-label="Game tabs"></div>
-        <button class="new-tab" id="new-tab" aria-label="New tab" title="New tab">+</button>
-      </div>
-      <div class="browser-toolbar" role="toolbar" aria-label="Browser navigation">
-        <button class="browser-control" id="browser-back" aria-label="Go back" title="Back" disabled>&larr;</button>
-        <button class="browser-control" id="browser-forward" aria-label="Go forward" title="Forward" disabled>&rarr;</button>
-        <button class="browser-control" id="browser-reload" aria-label="Reload current game" title="Reload current game">&#8635;</button>
-        <button class="browser-control" id="browser-home" aria-label="Open homepage" title="Home">&#8962;</button>
-        <form class="browser-address" id="address-search"><span aria-hidden="true">&#9672;</span><input id="browser-address" name="q" aria-label="Search the web with DuckDuckGo" placeholder="Search or enter a web address" autocomplete="off" maxlength="200" required spellcheck="false"><button type="submit" aria-label="Search address bar">&rarr;</button></form>
-        <span class="browser-toolbar-name">Ironclad Games</span>
-      </div>
-    </header>
-    <nav class="sidebar" aria-label="Ironclad sidebar">
-      <img class="rail-logo" src="./assets/icon.svg" alt="Ironclad" width="26" height="26">
-      <button class="rail-button" id="sidebar-home" aria-label="Home" title="Home" aria-current="page"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="m3 11 9-8 9 8M5 9v12h5v-7h4v7h5V9"/></svg><span>Home</span></button>
-      <button class="rail-button" id="sidebar-games" aria-label="Games" title="Games"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M7 7h10c3 0 4 3 4 6l-1 5c-.3 2-2 2-3 1l-3-3h-4l-3 3c-1 1-3 1-3-1l-1-5c0-3 1-6 4-6ZM6 11h5M8.5 8.5v5M16 11h.1M18 13h.1"/></svg><span>Games</span></button>
-      <div class="rail-divider"></div>
-      <button class="rail-button" id="sidebar-widgets" aria-label="Widgets" title="Widgets" aria-expanded="false" aria-controls="widget-drawer"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3 3h7v7H3zM14 3h7v7h-7zM3 14h7v7H3zM14 14h7v7h-7z"/></svg><span>Widgets</span></button>
-      <button class="rail-button" id="sidebar-settings" aria-label="Settings" title="Settings"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3v3M12 18v3M3 12h3M18 12h3M5.6 5.6l2.1 2.1M16.3 16.3l2.1 2.1M5.6 18.4l2.1-2.1M16.3 7.7l2.1-2.1"/><circle cx="12" cy="12" r="6"/><circle cx="12" cy="12" r="2"/></svg><span>Settings</span></button>
-      <div class="rail-future">
-        <button class="rail-button" disabled title="Music — coming later"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M9 18V5l11-2v13M9 6l11-2M9 18c0 3-6 4-6 1s6-4 6-1ZM20 16c0 3-6 4-6 1s6-4 6-1Z"/></svg><span>Music</span><small>Later</small></button>
-        <button class="rail-button" disabled title="Movies — coming later"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3 4h18v16H3zM7 4v16M17 4v16M3 9h4M3 15h4M17 9h4M17 15h4"/></svg><span>Movies</span><small>Later</small></button>
-      </div>
-    </nav>
-    <aside class="widget-drawer" id="widget-drawer" aria-label="Widgets" hidden>
-      <div class="drawer-heading"><h2>Widgets</h2><button class="browser-control" id="close-widgets" aria-label="Close widgets">×</button></div>
-      <section class="widget"><h3>Local time</h3><time id="widget-time"></time><p id="widget-date"></p></section>
-      <section class="widget"><label for="widget-notes">Notes</label><textarea id="widget-notes" maxlength="4000" placeholder="Something to remember…"></textarea><p id="notes-status" role="status">Saved on this device</p></section>
-    </aside>
+    <header class="header"><button class="brand" id="home-games" type="button" aria-label="Ironclad Games home">Ironclad<span>Games</span></button></header>
     <main id="main">
-      <div id="panel-1" role="tabpanel" aria-labelledby="tab-1">
-      <section class="home-view" id="home-view">
-        <div class="home-center">
-          
-          <h1>Ironclad<span>.</span></h1>
-          <form class="web-search" role="search" aria-label="Web search">
-            <svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="10.5" cy="10.5" r="6.5"/><path d="m16 16 5 5"/></svg>
-            <input type="search" name="q" aria-label="Search DuckDuckGo" placeholder="Search the web" autocomplete="off" maxlength="200" required>
-            <button type="submit" aria-label="Search DuckDuckGo">&rarr;</button>
-          </form>
-          <p class="search-provider">DuckDuckGo · Browse inside Ironclad</p>
-        </div>
-      </section>
-      <section class="settings-view" id="settings-view" hidden><iframe title="Browser settings" src="about:blank" data-settings-frame></iframe></section>
-      <section class="web-view" id="web-view" hidden>
-        <div class="web-view-heading"><p id="web-status" role="status"></p><div><button class="button" id="web-retry">Reload page</button><button class="button" id="web-settings">Settings</button></div></div>
-        <div class="web-frame" id="web-frame"></div>
-      </section>
-      <section id="library-view" hidden>
+      <section id="library-view">
         <div class="page-heading">
           <div><h1>Games</h1><p id="search-status" role="status" aria-live="polite">17 games</p></div>
           <div role="search"><label class="search"><input type="search" id="game-search" aria-label="Search games" placeholder="Search games" autocomplete="off" aria-controls="game-grid"><button type="button" class="text-button" id="clear-search" aria-label="Clear search" hidden>Clear</button></label></div>
@@ -150,12 +101,9 @@
         <div class="frame-container" id="frame-container"></div>
         <p id="player-message" role="status"></p>
       </section>
-      </div>
     </main>
   </div>
-  <div class="desktop-notice"><h1>Ironclad Games</h1><p>Use a wider window to play.</p></div>
   <script type="module">
-    import {createBrowserSession,toBrowserUrl} from './assets/browser.js?v=storage-2';
     const games={
       'drive-mad':{title:'Drive Mad',src:'https://ubghyper.github.io/GameList.github.io/Drive-Mad/'},
       'moto-road-rash-3d':{title:'Moto Road Rash 3D',src:'https://class811.github.io/g7/moto-road-rash-3d/'},
@@ -175,146 +123,49 @@
       , 'ovo-2':{title:'OvO 2',src:'https://iogamesweb.com/play/ovo-2/'}
       , 'potato-league':{title:'Potato League',src:'https://itch.io/embed-upload/19853545?color=0b0b0b'}
     };
-    function createNavigation(){
-      let pages=[{view:'home'}],position=0;
-      return {current:()=>pages[position],canBack:()=>position>0,canForward:()=>position<pages.length-1,
-        visit(page){if(JSON.stringify(page)===JSON.stringify(pages[position]))return;pages=pages.slice(0,position+1);pages.push(page);position++;},
-        back(){if(position>0)position--;},forward(){if(position<pages.length-1)position++;}};
-    } // end-navigation
-    const panelTemplate=document.getElementById('panel-1').cloneNode(true);
-    document.getElementById('panel-1').remove();
-    const tabList=document.querySelector('[role="tablist"]'),entries=[];
-    let nextId=1,activeEntry=null;
-    const back=document.getElementById('browser-back'),forward=document.getElementById('browser-forward'),address=document.getElementById('browser-address');
-    function updateToolbar(){
-      const current=activeEntry?.controller;if(!current)return;
-      back.disabled=!current.navigation.canBack();forward.disabled=!current.navigation.canForward();
-      const page=current.navigation.current();address.value=page.view==='web'?page.url:'';
-      address.placeholder=page.view==='game'?'ironclad://play/'+page.gameId:page.view==='library'?'ironclad://games':page.view==='settings'?'ironclad://settings':'Search or enter a web address';
-      document.getElementById('sidebar-home').setAttribute('aria-current',page.view==='home'?'page':'false');
-      document.getElementById('sidebar-games').setAttribute('aria-current',['library','game'].includes(page.view)?'page':'false');
-      document.getElementById('sidebar-settings').setAttribute('aria-current',page.view==='settings'?'page':'false');
+
+    // Retire the old browsing worker without touching game saves.
+    if ('serviceWorker' in navigator) {
+      const siteScope = new URL('./', location.href).href;
+      navigator.serviceWorker.getRegistrations().then(registrations => {
+        for (const registration of registrations) {
+          if (registration.scope === siteScope && /\/proxy-sw\.js(?:\?|$)/.test((registration.active || registration.waiting || registration.installing)?.scriptURL || '')) registration.unregister();
+        }
+      }).catch(() => {});
     }
-    back.addEventListener('click',()=>{activeEntry.controller.navigation.back();activeEntry.controller.render();});
-    forward.addEventListener('click',()=>{activeEntry.controller.navigation.forward();activeEntry.controller.render();});
-    document.getElementById('browser-home').addEventListener('click',()=>activeEntry.controller.navigate({view:'home'}));
-    document.getElementById('sidebar-home').addEventListener('click',()=>activeEntry.controller.navigate({view:'home'}));
-    document.getElementById('sidebar-games').addEventListener('click',()=>activeEntry.controller.navigate({view:'library'}));
-    document.getElementById('sidebar-settings').addEventListener('click',()=>activeEntry.controller.navigate({view:'settings'}));
-    document.getElementById('address-search').addEventListener('submit',event=>{
-      event.preventDefault();try{activeEntry.controller.navigate({view:'web',url:toBrowserUrl(address.value)});}catch(error){address.setCustomValidity(error.message);address.reportValidity();}
+    const library=document.getElementById('library-view'),player=document.getElementById('player-view');
+    const container=document.getElementById('frame-container'),message=document.getElementById('player-message');
+    const search=document.getElementById('game-search'),clear=document.getElementById('clear-search');
+    const cards=[...document.querySelectorAll('.game-card')].map(card=>({card,text:card.textContent.toLowerCase().replace(/\s+/g,' ')}));
+    let activeButton=null,mountedGame=null;
+    function filterLibrary(){
+      const terms=search.value.trim().toLowerCase().split(/\s+/).filter(Boolean);let count=0;
+      for(const {card,text} of cards){const matches=terms.every(term=>text.includes(term));card.hidden=!matches;if(matches)count++;}
+      document.getElementById('search-status').textContent=count+' '+(count===1?'game':'games')+(terms.length?' found':'');
+      document.getElementById('search-empty').hidden=count!==0;clear.hidden=search.value.length===0;
+    }
+    function resetSearch(){search.value='';filterLibrary();search.focus();}
+    search.addEventListener('input',filterLibrary);clear.addEventListener('click',resetSearch);
+    search.addEventListener('keydown',event=>{if(event.key==='Escape'){event.preventDefault();resetSearch();}});
+    document.querySelectorAll('[data-game]').forEach(button=>button.addEventListener('click',()=>{
+      const game=games[button.dataset.game];if(!game)return;activeButton=button;
+      if(mountedGame!==button.dataset.game){
+        mountedGame=button.dataset.game;
+        const frame=document.createElement('iframe');frame.title=game.title;frame.allow='fullscreen; autoplay; gamepad';frame.allowFullscreen=true;
+        frame.sandbox='allow-scripts allow-same-origin allow-forms allow-pointer-lock';frame.referrerPolicy='strict-origin';
+        document.getElementById('game-title').textContent=game.title;message.textContent='Loading '+game.title+'...';
+        frame.addEventListener('load',()=>{message.textContent='';if(!player.hidden)frame.focus();});frame.src=game.src;container.replaceChildren(frame);
+      }
+      library.hidden=true;player.hidden=false;window.scrollTo(0,0);container.querySelector('iframe')?.focus();
+    }));
+    function showLibrary(){player.hidden=true;library.hidden=false;window.scrollTo(0,0);activeButton?.focus();}
+    document.getElementById('back-library').addEventListener('click',showLibrary);
+    document.getElementById('home-games').addEventListener('click',showLibrary);
+    document.getElementById('fullscreen').addEventListener('click',async()=>{
+      try{if(document.fullscreenElement)await document.exitFullscreen();else await container.requestFullscreen();container.querySelector('iframe')?.focus();}
+      catch{message.textContent='Fullscreen is unavailable. You can keep playing here.';}
     });
-    address.addEventListener('input',()=>address.setCustomValidity(''));
-    const drawer=document.getElementById('widget-drawer'),widgetToggle=document.getElementById('sidebar-widgets');
-    function toggleWidgets(open){drawer.hidden=!open;widgetToggle.setAttribute('aria-expanded',String(open));if(open)document.getElementById('close-widgets').focus();else widgetToggle.focus();}
-    widgetToggle.addEventListener('click',()=>toggleWidgets(drawer.hidden));document.getElementById('close-widgets').addEventListener('click',()=>toggleWidgets(false));
-    drawer.addEventListener('keydown',event=>{if(event.key==='Escape')toggleWidgets(false);});
-    function updateClock(){const now=new Date();document.getElementById('widget-time').textContent=now.toLocaleTimeString([],{hour:'2-digit',minute:'2-digit'});document.getElementById('widget-date').textContent=now.toLocaleDateString([],{weekday:'long',month:'short',day:'numeric'});}
-    updateClock();setInterval(updateClock,10000);
-    const notes=document.getElementById('widget-notes'),notesStatus=document.getElementById('notes-status');
-    try{notes.value=localStorage.getItem('ironclad-widget-notes')||'';}catch{notesStatus.textContent='Notes are temporary in this browser';}
-    notes.addEventListener('input',()=>{try{localStorage.setItem('ironclad-widget-notes',notes.value);notesStatus.textContent='Saved on this device';}catch{notesStatus.textContent='Unable to save on this device';}});
-    document.getElementById('browser-reload').addEventListener('click',()=>activeEntry.controller.reload());
-    document.getElementById('new-tab').addEventListener('click',()=>createTab());
-    function selectTab(entry){
-      if(activeEntry)activeEntry.scrollTop=window.scrollY;
-      activeEntry=entry;
-      entries.forEach(item=>{
-        const selected=item===entry;item.panel.hidden=!selected;
-        item.tab.setAttribute('aria-selected',String(selected));item.tab.tabIndex=selected?0:-1;
-      });
-      window.scrollTo(0,entry.scrollTop);updateToolbar();entry.tab.scrollIntoView({block:'nearest',inline:'nearest'});
-    }
-    function closeTab(entry){
-      const index=entries.indexOf(entry);if(index<0)return;
-      const wasActive=activeEntry===entry;
-      entry.controller.dispose();entry.panel.remove();entry.shell.remove();entries.splice(index,1);
-      if(wasActive)activeEntry=null;
-      if(!entries.length){createTab();return;}
-      if(wasActive)selectTab(entries[Math.min(index,entries.length-1)]);
-      activeEntry.tab.focus();
-    }
-    function createTab(){
-      const id=nextId++,panel=panelTemplate.cloneNode(true),shell=document.createElement('div');
-      panel.id='panel-'+id;panel.hidden=true;panel.setAttribute('aria-labelledby','tab-'+id);
-      panel.querySelectorAll('[id]').forEach(element=>{element.id+='-tab'+id;});
-      panel.querySelector('#game-search-tab'+id).setAttribute('aria-controls','game-grid-tab'+id);
-      document.getElementById('main').append(panel);
-      shell.className='browser-tab-shell';shell.setAttribute('role','presentation');
-      const tab=document.createElement('button');tab.className='browser-tab';tab.id='tab-'+id;
-      tab.setAttribute('role','tab');tab.setAttribute('aria-controls',panel.id);tab.setAttribute('aria-selected','false');
-      tab.innerHTML='<img src="./assets/icon.svg" alt="" width="16" height="16"><span class="tab-title">New tab</span><span class="tab-number">'+id+'</span>';
-      const close=document.createElement('button');close.className='close-tab';close.textContent='×';close.setAttribute('aria-label','Close tab '+id);close.title='Close tab';
-      shell.append(tab,close);tabList.append(shell);
-      const entry={id,panel,tab,shell,scrollTop:0,controller:null};entries.push(entry);
-      tab.addEventListener('click',()=>selectTab(entry));close.addEventListener('click',()=>closeTab(entry));
-      tab.addEventListener('keydown',event=>{
-        const index=entries.indexOf(entry);let target;
-        if(event.key==='ArrowRight')target=entries[(index+1)%entries.length];
-        else if(event.key==='ArrowLeft')target=entries[(index-1+entries.length)%entries.length];
-        else if(event.key==='Home')target=entries[0];else if(event.key==='End')target=entries.at(-1);
-        else if(event.key==='Delete'){event.preventDefault();closeTab(entry);return;}else return;
-        event.preventDefault();selectTab(target);target.tab.focus();
-      });
-      const find=name=>panel.querySelector('#'+name+'-tab'+id);
-      const home=find('home-view'),settingsView=find('settings-view'),webView=find('web-view'),library=find('library-view'),player=find('player-view'),container=find('frame-container'),message=find('player-message');
-      const search=find('game-search'),clearSearch=find('clear-search'),cards=[...panel.querySelectorAll('.game-card')];
-      const searchableCards=cards.map(card=>({card,text:card.textContent.toLowerCase().replace(/\s+/g,' ')}));
-      function filterLibrary(){
-        const terms=search.value.trim().toLowerCase().split(/\s+/).filter(Boolean);let count=0;
-        searchableCards.forEach(({card,text})=>{const matches=terms.every(term=>text.includes(term));card.hidden=!matches;if(matches)count++;});
-        find('search-status').textContent=count+' '+(count===1?'game':'games')+(terms.length?' found':'');
-        find('search-empty').hidden=count!==0;clearSearch.hidden=search.value.length===0;
-      }
-      search.addEventListener('input',filterLibrary);
-      function resetSearch(){search.value='';filterLibrary();search.focus();}
-      clearSearch.addEventListener('click',resetSearch);
-      search.addEventListener('keydown',event=>{if(event.key==='Escape'){event.preventDefault();resetSearch();}});
-      filterLibrary();let activeButton=null,mountedGame=null;
-      const navigation=createNavigation();
-      let mountedWeb=null;
-      const browserSession=createBrowserSession({container:find('web-frame'),onStatus:status=>{
-        find('web-status').textContent=status.message;find('web-status').dataset.state=status.state;
-      },onLocation:url=>{
-        if(navigation.current().view==='web'&&navigation.current().url!==url){mountedWeb=url;navigation.visit({view:'web',url});if(activeEntry===entry)updateToolbar();entry.tab.querySelector('.tab-title').textContent=new URL(url).hostname;}
-      }});
-      home.querySelector('form').addEventListener('submit',event=>{event.preventDefault();const input=event.currentTarget.elements.q;try{input.setCustomValidity('');navigate({view:'web',url:toBrowserUrl(input.value)});}catch(error){input.setCustomValidity(error.message);input.reportValidity();}});
-      home.querySelector('input').addEventListener('input',event=>event.target.setCustomValidity(''));
-      find('web-retry').addEventListener('click',()=>browserSession.reload());find('web-settings').addEventListener('click',()=>navigate({view:'settings'}));
-      function mountWeb(url){if(mountedWeb===url)return;mountedWeb=url;void browserSession.go(url);}
-      function mountGame(gameId){
-        if(mountedGame===gameId&&container.querySelector('iframe'))return;
-        const game=games[gameId];if(!game)return;mountedGame=gameId;
-        const frame=document.createElement('iframe');frame.id='plyIframe-tab'+entry.id;frame.title=game.title;frame.allow='fullscreen; autoplay; gamepad';frame.allowFullscreen=true;frame.sandbox='allow-scripts allow-same-origin allow-forms allow-pointer-lock';frame.referrerPolicy='strict-origin';
-        find('game-title').textContent=game.title;message.textContent=`Loading ${game.title}...`;
-        frame.addEventListener('load',()=>{message.textContent='';if(activeEntry===entry&&navigation.current().view==='game')frame.focus();});
-        frame.src=game.src;container.replaceChildren(frame);
-      }
-      function render(){
-        const page=navigation.current();home.hidden=page.view!=='home';library.hidden=page.view!=='library';player.hidden=page.view!=='game';settingsView.hidden=page.view!=='settings';webView.hidden=page.view!=='web';
-        if(page.view==='game')mountGame(page.gameId);
-        if(page.view==='web')mountWeb(page.url);if(page.view==='settings'){const settingsFrame=settingsView.querySelector('iframe');if(settingsFrame.getAttribute('src')==='about:blank')settingsFrame.src='./settings.html';}
-        entry.tab.querySelector('.tab-title').textContent=page.view==='home'?'New tab':page.view==='library'?'Games':page.view==='settings'?'Settings':page.view==='web'?new URL(page.url).hostname:games[page.gameId].title;
-        if(activeEntry===entry)updateToolbar();window.scrollTo(0,0);
-      }
-      function navigate(page){navigation.visit(page);render();}
-      entry.controller={navigation,navigate,render,dispose:()=>browserSession.dispose(),reload:()=>{
-        const page=navigation.current(),frame=container.querySelector('iframe');
-        if(page.view==='game'&&frame){message.textContent=`Loading ${games[page.gameId].title}...`;frame.src=games[page.gameId].src;}
-        else if(page.view==='library')resetSearch();else if(page.view==='web')browserSession.reload();else if(page.view==='settings')settingsView.querySelector('iframe').contentWindow.location.reload();else home.querySelector('input').focus();
-      }};
-      panel.querySelectorAll('[data-game]').forEach(button=>button.addEventListener('click',()=>{
-        if(!games[button.dataset.game])return;activeButton=button;navigate({view:'game',gameId:button.dataset.game});
-      }));
-      find('back-library').addEventListener('click',()=>{navigate({view:'library'});activeButton?.focus();});
-      find('fullscreen').addEventListener('click',async()=>{
-        try{if(document.fullscreenElement)await document.exitFullscreen();else await container.requestFullscreen();container.querySelector('iframe')?.focus();}
-        catch{message.textContent='Fullscreen is unavailable. You can keep playing here.';}
-      });
-      selectTab(entry);entry.tab.focus();return entry;
-    }
-    createTab();
-    updateToolbar();
+    filterLibrary();
   </script>
 </body>
 </html>
