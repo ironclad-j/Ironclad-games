@@ -11,9 +11,9 @@
   <link rel="stylesheet" href="./assets/site.css?v=settings-1">
 </head>
 <body>
-  <nav class="settings-rail" aria-label="Site settings"><button id="open-settings" type="button" aria-label="Settings" title="Settings"><span aria-hidden="true">⚙</span><span>Settings</span></button></nav>
+  <nav class="settings-rail" aria-label="Site settings"><button id="open-settings" type="button" aria-label="Settings" title="Settings"><span aria-hidden="true">&#9881;</span><span>Settings</span></button></nav>
   <dialog id="site-settings" aria-labelledby="settings-heading">
-    <div class="settings-heading"><h2 id="settings-heading">Settings</h2><button class="button" id="close-settings" aria-label="Close settings">×</button></div>
+    <div class="settings-heading"><h2 id="settings-heading">Settings</h2><button class="button" id="close-settings" aria-label="Close settings">&times;</button></div>
     <section class="setting-group"><h3>Browser tab</h3><label for="tab-appearance">Tab name and icon</label>
       <select id="tab-appearance"><option value="ironclad">Ironclad Games</option><option value="google">Google</option><option value="canva">Canva</option><option value="canvas">Canvas</option><option value="drive">Google Drive</option><option value="docs">Google Docs</option><option value="slides">Google Slides</option></select>
       <p>Applies immediately and is saved on this device.</p><p id="appearance-status" role="status" aria-live="polite"></p>
@@ -169,9 +169,7 @@
     const appearanceKey='ironclad-tab-appearance-v1';
     const appearance=document.getElementById('tab-appearance'),appearanceStatus=document.getElementById('appearance-status');
     const settingsDialog=document.getElementById('site-settings'),blankStatus=document.getElementById('blank-status');
-    function ownBlankShell(){
-      try{return window.parent!==window&&window.parent.location.href==='about:blank'&&window.parent.document.querySelector('iframe[data-ironclad-shell]')?.contentWindow===window?window.parent:null;}catch{return null;}
-    }
+    const isBlankArcade=location.href==='about:blank';
     function setTabMetadata(target,preset){
       target.title=preset.title;let icon=target.querySelector('link[rel="icon"]');
       if(!icon){icon=target.createElement('link');icon.rel='icon';target.head.append(icon);}
@@ -179,7 +177,7 @@
     }
     function applyTabAppearance(value){
       const key=Object.hasOwn(tabPresets,value)?value:'ironclad';appearance.value=key;
-      setTabMetadata(document,tabPresets[key]);const shell=ownBlankShell();if(shell)setTabMetadata(shell.document,tabPresets[key]);return key;
+      setTabMetadata(document,tabPresets[key]);return key;
     }
     let savedAppearance='ironclad';try{savedAppearance=localStorage.getItem(appearanceKey)||'ironclad';}catch{}
     applyTabAppearance(savedAppearance);
@@ -192,19 +190,31 @@
     document.getElementById('close-settings').addEventListener('click',()=>settingsDialog.close());
     settingsDialog.addEventListener('click',event=>{if(event.target===settingsDialog){const rect=settingsDialog.getBoundingClientRect();if(event.clientX<rect.left||event.clientX>rect.right||event.clientY<rect.top||event.clientY>rect.bottom)settingsDialog.close();}});
     const blankButton=document.getElementById('open-blank');
-    if(ownBlankShell()){blankButton.disabled=true;blankStatus.textContent='You are already in the about:blank arcade.';}
+    if(isBlankArcade){blankButton.disabled=true;blankStatus.textContent='You are already in the about:blank arcade.';}
     blankButton.addEventListener('click',()=>{
       const popup=window.open('about:blank','_blank');
       if(!popup){blankStatus.textContent='The browser blocked the new tab. Allow pop-ups for Ironclad and try again.';return;}
       try{
-        const doc=popup.document;doc.documentElement.lang='en';setTabMetadata(doc,tabPresets[appearance.value]);
-        const viewport=doc.createElement('meta');viewport.name='viewport';viewport.content='width=device-width, initial-scale=1';doc.head.append(viewport);
-        doc.body.style.cssText='margin:0;height:100dvh;overflow:hidden;background:#0b0b0b';
-        const frame=doc.createElement('iframe');frame.dataset.ironcladShell='';frame.title='Ironclad Games';frame.allow='fullscreen; autoplay; gamepad';frame.allowFullscreen=true;
-        frame.style.cssText='display:block;width:100%;height:100%;border:0';
-        frame.addEventListener('load',()=>{try{const count=frame.contentDocument.querySelectorAll('.game-card').length;blankStatus.textContent=count?'Opened all '+count+' games in the about:blank tab.':'The arcade could not load in the new tab. Please try again.';}catch{blankStatus.textContent='The browser could not confirm the new tab loaded. You can keep playing here.';}});
-        frame.src=new URL('./',document.baseURI).href;doc.body.replaceChildren(frame);popup.opener=null;
-        blankStatus.textContent='Opened the arcade in a new about:blank tab.';
+        const template=document.documentElement.cloneNode(true);
+        template.querySelectorAll('base').forEach(element=>element.remove());
+        const base=document.createElement('base');base.href=new URL('./',document.baseURI).href;template.querySelector('head').prepend(base);
+        template.querySelector('#site-settings').removeAttribute('open');
+        template.querySelector('#player-view').hidden=true;template.querySelector('#library-view').hidden=false;
+        template.querySelector('#frame-container').replaceChildren();
+        template.querySelectorAll('.game-card').forEach(card=>card.hidden=false);
+        template.querySelector('#game-search').removeAttribute('value');
+        template.querySelector('#clear-search').hidden=true;template.querySelector('#search-empty').hidden=true;
+        template.querySelector('#appearance-status').textContent='';template.querySelector('#blank-status').textContent='';
+        delete template.dataset.arcadeReady;
+        const html='<!doctype html>'+template.outerHTML;
+        // Initialize from the new window's own realm so its address remains about:blank.
+        popup.__ironcladReport=(url,count,ready)=>{
+          blankStatus.textContent=url==='about:blank'&&ready?'Opened all '+count+' games in the about:blank tab.':'The arcade did not finish loading in the new tab. Please try again.';
+        };
+        const bootstrap=popup.document.createElement('script');
+        bootstrap.textContent='document.open();document.write('+JSON.stringify(html)+');document.close();window.addEventListener("load",()=>{window.__ironcladReport(document.URL,document.querySelectorAll(".game-card").length,document.documentElement.dataset.arcadeReady==="true");delete window.__ironcladReport;},{once:true});';
+        blankStatus.textContent='Loading the arcade in about:blank...';
+        popup.document.body.append(bootstrap);popup.opener=null;
       }catch{popup.close();blankStatus.textContent='This browser could not open the arcade in about:blank. You can keep playing here.';}
     });
     const games={
@@ -240,7 +250,7 @@
 
     // Retire the old browsing worker without touching game saves.
     if ('serviceWorker' in navigator) {
-      const siteScope = new URL('./', location.href).href;
+      const siteScope = new URL('./', document.baseURI).href;
       navigator.serviceWorker.getRegistrations().then(registrations => {
         for (const registration of registrations) {
           if (registration.scope === siteScope && /\/proxy-sw\.js(?:\?|$)/.test((registration.active || registration.waiting || registration.installing)?.scriptURL || '')) registration.unregister();
@@ -280,6 +290,7 @@
       catch{message.textContent='Fullscreen is unavailable. You can keep playing here.';}
     });
     filterLibrary();
+    document.documentElement.dataset.arcadeReady='true';
   </script>
 </body>
 </html>
