@@ -74,3 +74,20 @@ dialog p{font-size:13px;color:var(--muted);line-height:1.6}
 .frame-container{background:#000}
 @media(max-width:1100px){.site{padding:0 32px}.game-grid{gap:16px}.game-content{padding:17px}}
 @media(max-width:700px){.site{padding:0 20px}.header{height:78px}main{padding-top:28px}.game-grid{grid-template-columns:repeat(2,minmax(0,1fr))}.page-heading{align-items:flex-start;flex-direction:column;gap:16px}.search{width:100%}.page-heading>[role="search"]{width:100%}.game-title{align-items:flex-start;flex-direction:column;gap:5px}.game-title h2{font-size:17px}.player-heading span{display:none}.frame-container{height:65vh;min-height:300px}}
+
+/* Arcade settings */
+.site{padding-left:104px;max-width:1184px}
+.settings-rail{position:fixed;inset:0 auto 0 0;width:64px;background:#101010;border-right:1px solid var(--line);z-index:10;display:flex;justify-content:center;padding:20px 5px}
+.settings-rail button{width:54px;height:58px;background:none;border:0;border-radius:6px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:3px;color:var(--muted);font-size:9px}
+.settings-rail button:hover{background:#242424;color:var(--ink)}
+.settings-rail button span:first-child{font-size:24px;line-height:1}
+#site-settings{position:fixed;inset:0 0 0 auto;width:min(380px,100%);height:100dvh;max-height:100dvh;max-width:100%;margin:0;padding:28px;border-radius:0;border:0;border-left:1px solid var(--line);overflow:auto;box-shadow:-15px 0 50px #0006}
+#site-settings::backdrop{background:#0008}
+.settings-heading{display:flex;align-items:center;justify-content:space-between;margin-bottom:28px;gap:20px}
+.settings-heading h2{margin:0}.settings-heading .button{font-size:21px;padding:2px 10px}
+.setting-group{border-top:1px solid var(--line);padding:24px 0}.setting-group h3{font-size:15px;font-weight:600;margin:0 0 20px}
+.setting-group label{display:block;color:var(--muted);font-size:12px;margin-bottom:9px}
+.setting-group select{width:100%;background:#1c1c1c;border:1px solid #3b3b3b;color:var(--ink);padding:11px 10px;border-radius:5px;font:inherit}
+.setting-group p{font-size:12px;line-height:1.7}.setting-group [role="status"]{min-height:20px;margin:12px 0 0}
+#open-blank:disabled{cursor:default}
+@media(max-width:700px){.site{padding-left:80px;padding-right:16px}.settings-rail{width:60px}.header{gap:10px}}
