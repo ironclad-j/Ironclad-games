@@ -8,9 +8,18 @@
   <meta name="description" content="Play games on Ironclad Games.">
   <title>Ironclad Games</title>
   <link rel="icon" href="./assets/icon.svg" type="image/svg+xml">
-  <link rel="stylesheet" href="./assets/site.css?v=arcade-1">
+  <link rel="stylesheet" href="./assets/site.css?v=settings-1">
 </head>
 <body>
+  <nav class="settings-rail" aria-label="Site settings"><button id="open-settings" type="button" aria-label="Settings" title="Settings"><span aria-hidden="true">⚙</span><span>Settings</span></button></nav>
+  <dialog id="site-settings" aria-labelledby="settings-heading">
+    <div class="settings-heading"><h2 id="settings-heading">Settings</h2><button class="button" id="close-settings" aria-label="Close settings">×</button></div>
+    <section class="setting-group"><h3>Browser tab</h3><label for="tab-appearance">Tab name and icon</label>
+      <select id="tab-appearance"><option value="ironclad">Ironclad Games</option><option value="google">Google</option><option value="canva">Canva</option><option value="canvas">Canvas</option><option value="drive">Google Drive</option><option value="docs">Google Docs</option><option value="slides">Google Slides</option></select>
+      <p>Applies immediately and is saved on this device.</p><p id="appearance-status" role="status" aria-live="polite"></p>
+    </section>
+    <section class="setting-group"><h3>about:blank</h3><p>Open the full game library in an about:blank tab. Games still load from their original hosts.</p><button class="button" id="open-blank" type="button">Open in about:blank</button><p id="blank-status" role="status" aria-live="polite"></p></section>
+  </dialog>
   <div class="site">
     <header class="header"><button class="brand" id="home-games" type="button" aria-label="Ironclad Games home">Ironclad<span>Games</span></button></header>
     <main id="main">
@@ -148,6 +157,56 @@
     </main>
   </div>
   <script type="module">
+    const tabPresets=Object.freeze({
+      ironclad:{title:'Ironclad Games',icon:new URL('./assets/icon.svg',document.baseURI).href},
+      google:{title:'Google',icon:'https://www.google.com/favicon.ico'},
+      canva:{title:'Canva',icon:'https://www.google.com/s2/favicons?domain=canva.com&sz=64'},
+      canvas:{title:'Canvas',icon:'https://www.google.com/s2/favicons?domain=canvas.instructure.com&sz=64'},
+      drive:{title:'Google Drive',icon:'https://ssl.gstatic.com/docs/doclist/images/drive_2022q3_32dp.png'},
+      docs:{title:'Google Docs',icon:'https://ssl.gstatic.com/docs/documents/images/kix-favicon7.ico'},
+      slides:{title:'Google Slides',icon:'https://ssl.gstatic.com/docs/presentations/images/favicon5.ico'}
+    });
+    const appearanceKey='ironclad-tab-appearance-v1';
+    const appearance=document.getElementById('tab-appearance'),appearanceStatus=document.getElementById('appearance-status');
+    const settingsDialog=document.getElementById('site-settings'),blankStatus=document.getElementById('blank-status');
+    function ownBlankShell(){
+      try{return window.parent!==window&&window.parent.location.href==='about:blank'&&window.parent.document.querySelector('iframe[data-ironclad-shell]')?.contentWindow===window?window.parent:null;}catch{return null;}
+    }
+    function setTabMetadata(target,preset){
+      target.title=preset.title;let icon=target.querySelector('link[rel="icon"]');
+      if(!icon){icon=target.createElement('link');icon.rel='icon';target.head.append(icon);}
+      icon.removeAttribute('type');icon.href=preset.icon;
+    }
+    function applyTabAppearance(value){
+      const key=Object.hasOwn(tabPresets,value)?value:'ironclad';appearance.value=key;
+      setTabMetadata(document,tabPresets[key]);const shell=ownBlankShell();if(shell)setTabMetadata(shell.document,tabPresets[key]);return key;
+    }
+    let savedAppearance='ironclad';try{savedAppearance=localStorage.getItem(appearanceKey)||'ironclad';}catch{}
+    applyTabAppearance(savedAppearance);
+    appearance.addEventListener('change',()=>{
+      const key=applyTabAppearance(appearance.value);
+      try{localStorage.setItem(appearanceKey,key);appearanceStatus.textContent='Saved.';}catch{appearanceStatus.textContent='Applied for this visit. This browser could not save the setting.';}
+    });
+    window.addEventListener('storage',event=>{if(event.key===appearanceKey)applyTabAppearance(event.newValue||'ironclad');});
+    document.getElementById('open-settings').addEventListener('click',()=>settingsDialog.showModal());
+    document.getElementById('close-settings').addEventListener('click',()=>settingsDialog.close());
+    settingsDialog.addEventListener('click',event=>{if(event.target===settingsDialog){const rect=settingsDialog.getBoundingClientRect();if(event.clientX<rect.left||event.clientX>rect.right||event.clientY<rect.top||event.clientY>rect.bottom)settingsDialog.close();}});
+    const blankButton=document.getElementById('open-blank');
+    if(ownBlankShell()){blankButton.disabled=true;blankStatus.textContent='You are already in the about:blank arcade.';}
+    blankButton.addEventListener('click',()=>{
+      const popup=window.open('about:blank','_blank');
+      if(!popup){blankStatus.textContent='The browser blocked the new tab. Allow pop-ups for Ironclad and try again.';return;}
+      try{
+        const doc=popup.document;doc.documentElement.lang='en';setTabMetadata(doc,tabPresets[appearance.value]);
+        const viewport=doc.createElement('meta');viewport.name='viewport';viewport.content='width=device-width, initial-scale=1';doc.head.append(viewport);
+        doc.body.style.cssText='margin:0;height:100dvh;overflow:hidden;background:#0b0b0b';
+        const frame=doc.createElement('iframe');frame.dataset.ironcladShell='';frame.title='Ironclad Games';frame.allow='fullscreen; autoplay; gamepad';frame.allowFullscreen=true;
+        frame.style.cssText='display:block;width:100%;height:100%;border:0';
+        frame.addEventListener('load',()=>{try{const count=frame.contentDocument.querySelectorAll('.game-card').length;blankStatus.textContent=count?'Opened all '+count+' games in the about:blank tab.':'The arcade could not load in the new tab. Please try again.';}catch{blankStatus.textContent='The browser could not confirm the new tab loaded. You can keep playing here.';}});
+        frame.src=new URL('./',document.baseURI).href;doc.body.replaceChildren(frame);popup.opener=null;
+        blankStatus.textContent='Opened the arcade in a new about:blank tab.';
+      }catch{popup.close();blankStatus.textContent='This browser could not open the arcade in about:blank. You can keep playing here.';}
+    });
     const games={
       'drive-mad':{title:'Drive Mad',src:'https://ubghyper.github.io/GameList.github.io/Drive-Mad/'},
       'moto-road-rash-3d':{title:'Moto Road Rash 3D',src:'https://class811.github.io/g7/moto-road-rash-3d/'},
