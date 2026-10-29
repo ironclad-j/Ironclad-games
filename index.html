@@ -25,7 +25,7 @@
     <main id="main">
       <section id="library-view">
         <div class="page-heading">
-          <div><h1>Games</h1><p id="search-status" role="status" aria-live="polite">29 games</p></div>
+          <div><h1>Games</h1><p id="search-status" role="status" aria-live="polite">32 games</p></div>
           <div role="search"><label class="search"><input type="search" id="game-search" aria-label="Search games" placeholder="Search games" autocomplete="off" aria-controls="game-grid"><button type="button" class="text-button" id="clear-search" aria-label="Clear search" hidden>Clear</button></label></div>
         </div>
         <div class="game-grid" id="game-grid">
@@ -149,6 +149,18 @@
             <div class="game-art" style="--card-bg:#102d35;height:auto;aspect-ratio:1"><img src="./assets/golf-orbit.png" alt="Golf Orbit" width="300" height="168" style="display:block;width:100%;height:100%;object-fit:contain" loading="lazy"></div>
             <div class="game-content"><div class="game-title"><h2>Golf Orbit</h2><span class="category">Sports</span></div><p>Launch your golf ball as far as you can.</p><button class="play-button" data-game="golf-orbit" aria-label="Play Golf Orbit">Play</button></div>
           </article>
+          <article class="game-card">
+            <div class="game-art" style="--card-bg:#111;height:auto;aspect-ratio:1"><img src="./assets/happy-wheels.png" alt="Happy Wheels" width="447" height="447" style="display:block;width:100%;height:100%;object-fit:contain" loading="lazy"></div>
+            <div class="game-content"><div class="game-title"><h2>Happy Wheels</h2><span class="category">Driving</span></div><p>Take on obstacle courses in the Happy Wheels demo.</p><button class="play-button" data-game="happy-wheels" aria-label="Play Happy Wheels">Play</button></div>
+          </article>
+          <article class="game-card">
+            <div class="game-art" style="--card-bg:#111;height:auto;aspect-ratio:1"><img src="./assets/age-of-war.png" alt="Age of War" width="511" height="384" style="display:block;width:100%;height:100%;object-fit:contain" loading="lazy"></div>
+            <div class="game-content"><div class="game-title"><h2>Age of War</h2><span class="category">Strategy</span></div><p>Evolve your army and defend your base through the ages.</p><button class="play-button" data-game="age-of-war" aria-label="Play Age of War">Play</button></div>
+          </article>
+          <article class="game-card">
+            <div class="game-art" style="--card-bg:#111;height:auto;aspect-ratio:1"><img src="./assets/age-of-war-2.png" alt="Age of War 2" width="547" height="365" style="display:block;width:100%;height:100%;object-fit:contain" loading="lazy"></div>
+            <div class="game-content"><div class="game-title"><h2>Age of War 2</h2><span class="category">Strategy</span></div><p>Lead your army through another battle across history.</p><button class="play-button" data-game="age-of-war-2" aria-label="Play Age of War 2">Play</button></div>
+          </article>
         </div>
         <p class="empty-state" id="search-empty" hidden>No games found. Try another name or clear your search.</p>
       </section>
@@ -251,6 +263,9 @@
       , 'basket-bros':{title:'Basket Bros',src:'https://class811.github.io/g7/basket-bros/'}
       , 'super-mario-bros':{title:'Super Mario Bros.',src:'https://class811.github.io/g9/super-mario-bros/'}
       , 'golf-orbit':{title:'Golf Orbit',src:'https://tapnation.cdn.msnfun.com/9n3vgdv15p8s/v6/index.html'}
+      , 'age-of-war-2':{title:'Age of War 2',src:'./flash-player.html?game=age-of-war-2'}
+      , 'age-of-war':{title:'Age of War',src:'./flash-player.html?game=age-of-war'}
+      , 'happy-wheels':{title:'Happy Wheels',src:'./flash-player.html?game=happy-wheels'}
     };
 
     // Retire the old browsing worker without touching game saves.

@@ -1,0 +1,22 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Ironclad Flash Player</title>
+<style>html,body,#player{width:100%;height:100%;margin:0;overflow:hidden;background:#000}ruffle-player{width:100%;height:100%}#status{position:fixed;inset:0;display:grid;place-content:center;padding:24px;color:#ccc;background:#0b0b0b;font:14px/1.6 system-ui;text-align:center}#status[hidden]{display:none}</style></head><body><div id="player"></div><p id="status" role="status">Loading game...</p>
+<script>
+const flashGames=Object.freeze({
+ 'happy-wheels':{title:'Happy Wheels',url:'https://cdn.jsdelivr.net/gh/e-nesgundugdu/f@main/HappyWheels.swf'},
+ 'age-of-war':{title:'Age of War',url:'https://cdn.jsdelivr.net/gh/papamamia/70099@main/vv/age_of_war.swf'},
+ 'age-of-war-2':{title:'Age of War 2',url:'https://cdn.jsdelivr.net/gh/vjspranav/FlashGames@c4afbfe9dd12f23ef93e19d7f3d298105448f349/games/Age_Of%20_War_2.swf'}
+});
+const key=new URLSearchParams(location.search).get('game'),game=Object.hasOwn(flashGames,key)?flashGames[key]:null,status=document.getElementById('status');
+if(!game){status.textContent='Game not found.';}else{
+ document.title=game.title;
+ const runtime=document.createElement('script');runtime.src='https://unpkg.com/@ruffle-rs/ruffle@0.7.1/ruffle.js';
+ runtime.onerror=()=>status.textContent='The Flash player could not load. Please check your connection and reload.';
+ runtime.onload=async()=>{try{
+  const player=window.RufflePlayer.newest().createPlayer();document.getElementById('player').append(player);
+  await player.ruffle().load({url:game.url,autoplay:'on',allowScriptAccess:false,openUrlMode:'deny',backgroundColor:'#000',letterbox:'on'});
+  status.hidden=true;
+ }catch{status.textContent='This game could not load. Its host may be unavailable or blocked. Please try again later.';}};
+ document.head.append(runtime);
+}
+</script></body></html>
