@@ -25,7 +25,7 @@
     <main id="main">
       <section id="library-view">
         <div class="page-heading">
-          <div><h1>Games</h1><p id="search-status" role="status" aria-live="polite">28 games</p></div>
+          <div><h1>Games</h1><p id="search-status" role="status" aria-live="polite">29 games</p></div>
           <div role="search"><label class="search"><input type="search" id="game-search" aria-label="Search games" placeholder="Search games" autocomplete="off" aria-controls="game-grid"><button type="button" class="text-button" id="clear-search" aria-label="Clear search" hidden>Clear</button></label></div>
         </div>
         <div class="game-grid" id="game-grid">
@@ -145,6 +145,10 @@
             <div class="game-art" style="--card-bg:#191919;height:auto;aspect-ratio:1"><img src="./assets/super-mario-bros.png" alt="Super Mario Bros." width="300" height="300" style="display:block;width:100%;height:100%;object-fit:cover" loading="lazy"></div>
             <div class="game-content"><div class="game-title"><h2>Super Mario Bros.</h2><span class="category">Platformer</span></div><p>Run and jump through the Mushroom Kingdom.</p><button class="play-button" data-game="super-mario-bros" aria-label="Play Super Mario Bros.">Play</button></div>
           </article>
+          <article class="game-card">
+            <div class="game-art" style="--card-bg:#102d35;height:auto;aspect-ratio:1"><img src="./assets/golf-orbit.png" alt="Golf Orbit" width="300" height="168" style="display:block;width:100%;height:100%;object-fit:contain" loading="lazy"></div>
+            <div class="game-content"><div class="game-title"><h2>Golf Orbit</h2><span class="category">Sports</span></div><p>Launch your golf ball as far as you can.</p><button class="play-button" data-game="golf-orbit" aria-label="Play Golf Orbit">Play</button></div>
+          </article>
         </div>
         <p class="empty-state" id="search-empty" hidden>No games found. Try another name or clear your search.</p>
       </section>
@@ -246,6 +250,7 @@
       , 'flappy-bird':{title:'Flappy Bird',src:'https://class811.github.io/g8/flappy-bird-origin/'}
       , 'basket-bros':{title:'Basket Bros',src:'https://class811.github.io/g7/basket-bros/'}
       , 'super-mario-bros':{title:'Super Mario Bros.',src:'https://class811.github.io/g9/super-mario-bros/'}
+      , 'golf-orbit':{title:'Golf Orbit',src:'https://tapnation.cdn.msnfun.com/9n3vgdv15p8s/v6/index.html'}
     };
 
     // Retire the old browsing worker without touching game saves.
