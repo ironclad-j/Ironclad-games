@@ -1,7 +1,7 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import {catalog} from '../src/catalog.js';
-test('twenty-eight games retain the supplied iframe sources',()=>{assert.equal(catalog.length,28);assert.deepEqual(catalog.slice(0,8).map(g=>g.frameUrl),['https://ubghyper.github.io/GameList.github.io/Drive-Mad/','https://class811.github.io/g7/moto-road-rash-3d/','https://class811.github.io/g/retro-bowl/','https://class811.github.io/g2/big-shot-boxing/','https://class811.github.io/g/slope/','https://class811.github.io/g/drift-hunters/','https://class811.github.io/g8/snow-rider-3d/','https://classroom2111.github.io/g5/class-456/']);assert.equal(catalog[2].title,'Retro Bowl');assert.ok(catalog.every(g=>g.external));});
+test('twenty-nine games retain the supplied iframe sources',()=>{assert.equal(catalog.length,29);assert.deepEqual(catalog.slice(0,8).map(g=>g.frameUrl),['https://ubghyper.github.io/GameList.github.io/Drive-Mad/','https://class811.github.io/g7/moto-road-rash-3d/','https://class811.github.io/g/retro-bowl/','https://class811.github.io/g2/big-shot-boxing/','https://class811.github.io/g/slope/','https://class811.github.io/g/drift-hunters/','https://class811.github.io/g8/snow-rider-3d/','https://classroom2111.github.io/g5/class-456/']);assert.equal(catalog[2].title,'Retro Bowl');assert.ok(catalog.every(g=>g.external));});
 test("Moto X3M Spooky Land has the supplied source",()=>{const game=catalog.find(g=>g.id==="moto-x3m-spooky-land");assert.equal(game?.frameUrl,"https://classroom2111.github.io/g5/class-461/");assert.equal(game?.title,"Moto X3M Spooky Land");});
 test("Stacktris has the supplied source",()=>{const game=catalog.find(g=>g.id==="stacktris");assert.equal(game?.frameUrl,"https://class811.github.io/g6/stacktris/");assert.equal(game?.title,"Stacktris");});
 test("Rocket Soccer Derby has the supplied source",()=>{const game=catalog.find(g=>g.id==="rocket-soccer-derby");assert.equal(game?.frameUrl,"https://class811.github.io/g6/rocket-soccer-derby/");assert.equal(game?.title,"Rocket Soccer Derby");});
@@ -35,3 +35,5 @@ test("Flappy Bird uses the supplied source",()=>{assert.equal(catalog.find(g=>g.
 test("Basket Bros uses the supplied source",()=>{assert.equal(catalog.find(g=>g.id==="basket-bros")?.frameUrl,"https://class811.github.io/g7/basket-bros/");});
 
 test("Super Mario Bros. uses the supplied source",()=>{assert.equal(catalog.find(g=>g.id==="super-mario-bros")?.frameUrl,"https://class811.github.io/g9/super-mario-bros/");});
+
+test("Golf Orbit uses the clean playable embed",()=>{assert.equal(catalog.find(g=>g.id==="golf-orbit")?.frameUrl,"https://tapnation.cdn.msnfun.com/9n3vgdv15p8s/v6/index.html");});
