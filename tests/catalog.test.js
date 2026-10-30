@@ -1,7 +1,7 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import {catalog} from '../src/catalog.js';
-test('thirty-two games retain the supplied iframe sources',()=>{assert.equal(catalog.length,32);assert.deepEqual(catalog.slice(0,8).map(g=>g.frameUrl),['https://ubghyper.github.io/GameList.github.io/Drive-Mad/','https://class811.github.io/g7/moto-road-rash-3d/','https://class811.github.io/g/retro-bowl/','https://class811.github.io/g2/big-shot-boxing/','https://class811.github.io/g/slope/','https://class811.github.io/g/drift-hunters/','https://class811.github.io/g8/snow-rider-3d/','https://classroom2111.github.io/g5/class-456/']);assert.equal(catalog[2].title,'Retro Bowl');assert.ok(catalog.every(g=>g.external));});
+test('thirty-four games retain the supplied iframe sources',()=>{assert.equal(catalog.length,34);assert.deepEqual(catalog.slice(0,8).map(g=>g.frameUrl),['https://ubghyper.github.io/GameList.github.io/Drive-Mad/','https://class811.github.io/g7/moto-road-rash-3d/','https://class811.github.io/g/retro-bowl/','https://class811.github.io/g2/big-shot-boxing/','https://class811.github.io/g/slope/','https://class811.github.io/g/drift-hunters/','https://class811.github.io/g8/snow-rider-3d/','https://classroom2111.github.io/g5/class-456/']);assert.equal(catalog[2].title,'Retro Bowl');assert.ok(catalog.every(g=>g.external));});
 test("Moto X3M Spooky Land has the supplied source",()=>{const game=catalog.find(g=>g.id==="moto-x3m-spooky-land");assert.equal(game?.frameUrl,"https://classroom2111.github.io/g5/class-461/");assert.equal(game?.title,"Moto X3M Spooky Land");});
 test("Stacktris has the supplied source",()=>{const game=catalog.find(g=>g.id==="stacktris");assert.equal(game?.frameUrl,"https://class811.github.io/g6/stacktris/");assert.equal(game?.title,"Stacktris");});
 test("Rocket Soccer Derby has the supplied source",()=>{const game=catalog.find(g=>g.id==="rocket-soccer-derby");assert.equal(game?.frameUrl,"https://class811.github.io/g6/rocket-soccer-derby/");assert.equal(game?.title,"Rocket Soccer Derby");});
@@ -40,6 +40,10 @@ test("Golf Orbit uses the local player without the advertising SDK",()=>{assert.
 
 test("Happy Wheels uses the supplied bkrzt player",()=>{assert.equal(catalog.find(g=>g.id==="happy-wheels")?.frameUrl,"https://bkrztpisrgtrux06ao4p.github.io/happywheels.html");});
 
-test("Age of War uses the Flash iframe player",()=>{assert.equal(catalog.find(g=>g.id==="age-of-war")?.frameUrl,"./flash-player.html?game=age-of-war");});
+test("Age of War uses the supplied bkrzt player",()=>{assert.equal(catalog.find(g=>g.id==="age-of-war")?.frameUrl,"https://bkrztpisrgtrux06ao4p.github.io/ageofwar.html");});
 
-test("Age of War 2 uses the Flash iframe player",()=>{assert.equal(catalog.find(g=>g.id==="age-of-war-2")?.frameUrl,"./flash-player.html?game=age-of-war-2");});
+test("Age of War 2 uses the supplied bkrzt player",()=>{assert.equal(catalog.find(g=>g.id==="age-of-war-2")?.frameUrl,"https://bkrztpisrgtrux06ao4p.github.io/ageofwar2.html");});
+
+test("Ages of Conflict uses the supplied bkrzt player",()=>{assert.equal(catalog.find(g=>g.id==="ages-of-conflict")?.frameUrl,"https://bkrztpisrgtrux06ao4p.github.io/agesofconflict.html");});
+
+test("Minecraft 1.8 uses the supplied bkrzt player",()=>{assert.equal(catalog.find(g=>g.id==="minecraft-1-8")?.frameUrl,"https://bkrztpisrgtrux06ao4p.github.io/1.8.html");});
