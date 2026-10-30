@@ -36,7 +36,7 @@ test("Basket Bros uses the supplied source",()=>{assert.equal(catalog.find(g=>g.
 
 test("Super Mario Bros. uses the supplied source",()=>{assert.equal(catalog.find(g=>g.id==="super-mario-bros")?.frameUrl,"https://class811.github.io/g9/super-mario-bros/");});
 
-test("Golf Orbit uses the player from the supplied Google Sites page",()=>{assert.equal(catalog.find(g=>g.id==="golf-orbit")?.frameUrl,"https://script.google.com/macros/s/AKfycbyuLezjXfvQ1JQoLLYA3LRpzzdXYrSGUKRgQmnECgUwZPReJvUAEPjqMGBtd2_njig4/exec");});
+test("Golf Orbit uses the local player without the advertising SDK",()=>{assert.equal(catalog.find(g=>g.id==="golf-orbit")?.frameUrl,"./golf-player.html");});
 
 test("Happy Wheels uses the Flash iframe player",()=>{assert.equal(catalog.find(g=>g.id==="happy-wheels")?.frameUrl,"./flash-player.html?game=happy-wheels");});
 
