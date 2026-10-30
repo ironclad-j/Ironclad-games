@@ -25,7 +25,7 @@
     <main id="main">
       <section id="library-view">
         <div class="page-heading">
-          <div><h1>Games</h1><p id="search-status" role="status" aria-live="polite">32 games</p></div>
+          <div><h1>Games</h1><p id="search-status" role="status" aria-live="polite">34 games</p></div>
           <div role="search"><label class="search"><input type="search" id="game-search" aria-label="Search games" placeholder="Search games" autocomplete="off" aria-controls="game-grid"><button type="button" class="text-button" id="clear-search" aria-label="Clear search" hidden>Clear</button></label></div>
         </div>
         <div class="game-grid" id="game-grid">
@@ -161,6 +161,14 @@
             <div class="game-art" style="--card-bg:#111;height:auto;aspect-ratio:1"><img src="./assets/age-of-war-2.png" alt="Age of War 2" width="547" height="365" style="display:block;width:100%;height:100%;object-fit:contain" loading="lazy"></div>
             <div class="game-content"><div class="game-title"><h2>Age of War 2</h2><span class="category">Strategy</span></div><p>Lead your army through another battle across history.</p><button class="play-button" data-game="age-of-war-2" aria-label="Play Age of War 2">Play</button></div>
           </article>
+          <article class="game-card">
+            <div class="game-art" style="--card-bg:#111;height:auto;aspect-ratio:1"><img src="./assets/ages-of-conflict.png" alt="Ages of Conflict" width="180" height="220" style="display:block;width:100%;height:100%;object-fit:contain" loading="lazy"></div>
+            <div class="game-content"><div class="game-title"><h2>Ages of Conflict</h2><span class="category">Strategy</span></div><p>Watch nations grow and compete in a world simulator.</p><button class="play-button" data-game="ages-of-conflict" aria-label="Play Ages of Conflict">Play</button></div>
+          </article>
+          <article class="game-card">
+            <div class="game-art" style="--card-bg:#111;height:auto;aspect-ratio:1"><img src="./assets/minecraft-1-8.png" alt="Minecraft 1.8" width="546" height="600" style="display:block;width:100%;height:100%;object-fit:contain" loading="lazy"></div>
+            <div class="game-content"><div class="game-title"><h2>Minecraft 1.8</h2><span class="category">Sandbox</span></div><p>Build and explore a block-filled world.</p><button class="play-button" data-game="minecraft-1-8" aria-label="Play Minecraft 1.8">Play</button></div>
+          </article>
         </div>
         <p class="empty-state" id="search-empty" hidden>No games found. Try another name or clear your search.</p>
       </section>
@@ -263,9 +271,11 @@
       , 'basket-bros':{title:'Basket Bros',src:'https://class811.github.io/g7/basket-bros/'}
       , 'super-mario-bros':{title:'Super Mario Bros.',src:'https://class811.github.io/g9/super-mario-bros/'}
       , 'golf-orbit':{title:'Golf Orbit',src:'./golf-player.html'}
-      , 'age-of-war-2':{title:'Age of War 2',src:'./flash-player.html?game=age-of-war-2'}
-      , 'age-of-war':{title:'Age of War',src:'./flash-player.html?game=age-of-war'}
+      , 'age-of-war-2':{title:'Age of War 2',src:'https://bkrztpisrgtrux06ao4p.github.io/ageofwar2.html'}
+      , 'age-of-war':{title:'Age of War',src:'https://bkrztpisrgtrux06ao4p.github.io/ageofwar.html'}
       , 'happy-wheels':{title:'Happy Wheels',src:'https://bkrztpisrgtrux06ao4p.github.io/happywheels.html'}
+      , 'ages-of-conflict':{title:"Ages of Conflict",src:"https://bkrztpisrgtrux06ao4p.github.io/agesofconflict.html"}
+      , 'minecraft-1-8':{title:"Minecraft 1.8",src:"https://bkrztpisrgtrux06ao4p.github.io/1.8.html"}
     };
 
     // Retire the old browsing worker without touching game saves.
