@@ -1,0 +1,46 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8">
+<meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'unsafe-inline' 'wasm-unsafe-eval' blob: https://cdn.jsdelivr.net/gh/fedosyamamontova/config@702ad8dd2e653c3b29446973add145b925d98b25/src/loader.js https://cdn.jsdelivr.net/gh/fedosyamamontova/config@702ad8dd2e653c3b29446973add145b925d98b25/src/go.f.js; connect-src https://cdn.jsdelivr.net/gh/fedosyamamontova/config@702ad8dd2e653c3b29446973add145b925d98b25/src/go.f.js https://cdn.jsdelivr.net/gh/fedosyamamontova/config@702ad8dd2e653c3b29446973add145b925d98b25/src/go.d.js https://cdn.jsdelivr.net/gh/fedosyamamontova/config@702ad8dd2e653c3b29446973add145b925d98b25/src/go.w.js https://cdn.jsdelivr.net/gh/fedosyamamontova/config@702ad8dd2e653c3b29446973add145b925d98b25/src/sa/; style-src 'unsafe-inline'; img-src data: blob:; media-src data: blob:; worker-src blob:; frame-src 'none'; object-src 'none'; base-uri 'none'; form-action 'none'">
+<meta name="viewport" content="width=device-width,initial-scale=1"><title>Golf Orbit</title>
+<style>html,body,canvas{width:100%;height:100%;margin:0;background:#000;overflow:hidden}canvas{display:block;outline:none}#status{position:fixed;inset:0;display:grid;place-content:center;color:#ddd;background:#111;font:14px system-ui;text-align:center;padding:24px}#status[hidden]{display:none}</style></head>
+<body><canvas id="canvas" tabindex="0" aria-label="Golf Orbit game"></canvas><div id="status" role="status">Loading Golf Orbit...</div>
+<script id="golf-bridge">
+// Minimal local Unity integration. No advertising SDK or external platform scripts.
+function installGolfBridge(host, storage, send) {
+ const prefix='ironclad-golf-orbit:',keysSeparator='{bridge_keys_separator}',valuesSeparator='{bridge_values_separator}',dataSeparator='{bridge_data_separator}';
+ const falseGetters=['getIsPlatformGetAllGamesSupported','getIsPlatformGetGameByIdSupported','getIsPlayerAuthorizationSupported','getIsPlayerAuthorized','getIsBannerSupported','getIsInterstitialSupported','getIsRewardedSupported','getIsShareSupported','getIsInviteFriendsSupported','getIsJoinCommunitySupported','getIsCreatePostSupported','getIsAddToHomeScreenSupported','getIsAddToFavoritesSupported','getIsRateSupported','getIsExternalLinksAllowed','getIsPaymentsSupported','getIsRemoteConfigSupported','getIsAchievementsSupported','getIsGetAchievementsListSupported','getIsAchievementsNativePopupSupported'];
+ for(const name of falseGetters)host[name]=()=>'false';
+ const emptyGetters=['getPlatformPayload','getPlatformTld','getPlayerId','getPlayerName','getPlayerPhotos','getPlayerExtra','getRewardedPlacement'];
+ for(const name of emptyGetters)host[name]=()=>'';
+ Object.assign(host,{
+  getPlatformId:()=>'mock',getPlatformLanguage:()=>'en',getDeviceType:()=>'desktop',getIsPlatformAudioEnabled:()=>'true',getVisibilityState:()=>'visible',getLeaderboardsType:()=>'not_available',
+  getStorageDefaultType:()=>'local_storage',getIsStorageSupported:type=>String(type==='local_storage'),getIsStorageAvailable:type=>String(type==='local_storage'),
+  getInterstitialState:()=>'closed',getMinimumDelayBetweenInterstitial:()=>'0',setMinimumDelayBetweenInterstitial:()=>{},
+  showInterstitial:()=>send('OnInterstitialStateChanged','closed'),showRewarded:()=>send('OnRewardedStateChanged','failed'),showBanner:()=>send('OnBannerStateChanged','hidden'),hideBanner:()=>send('OnBannerStateChanged','hidden'),checkAdBlock:()=>send('OnCheckAdBlockCompleted','true'),
+  sendMessageToPlatform:()=>{},getServerTime:()=>send('OnGetServerTimeCompleted',String(Date.now())),
+  getStorageData(key,type){try{if(type!=='local_storage')throw Error();const values=key.split(keysSeparator).map(k=>storage.getItem(prefix+k)??'');send('OnGetStorageDataSuccess',key+dataSeparator+values.join(valuesSeparator));}catch{send('OnGetStorageDataFailed',key);}},
+  setStorageData(key,value,type){try{if(type!=='local_storage')throw Error();const keys=key.split(keysSeparator),values=value.split(valuesSeparator);if(keys.length!==values.length)throw Error();keys.forEach((k,i)=>storage.setItem(prefix+k,values[i]));send('OnSetStorageDataSuccess',key);}catch{send('OnSetStorageDataFailed',key);}},
+  deleteStorageData(key,type){try{if(type!=='local_storage')throw Error();key.split(keysSeparator).forEach(k=>storage.removeItem(prefix+k));send('OnDeleteStorageDataSuccess',key);}catch{send('OnDeleteStorageDataFailed',key);}}
+ });
+ const unsupported={authorizePlayer:'OnAuthorizeCompleted',getAllGames:'OnGetAllGamesCompletedFailed',getGameById:'OnGetGameByIdCompletedFailed',share:'OnShareCompleted',inviteFriends:'OnInviteFriendsCompleted',joinCommunity:'OnJoinCommunityCompleted',createPost:'OnCreatePostCompleted',addToHomeScreen:'OnAddToHomeScreenCompleted',addToFavorites:'OnAddToFavoritesCompleted',rate:'OnRateCompleted',leaderboardsSetScore:'OnLeaderboardsSetScoreCompleted',leaderboardsGetEntries:'OnLeaderboardsGetEntriesCompletedFailed',leaderboardsShowNativePopup:'OnLeaderboardsShowNativePopupCompleted',paymentsPurchase:'OnPaymentsPurchaseFailed',paymentsConsumePurchase:'OnPaymentsConsumePurchaseFailed',paymentsGetCatalog:'OnPaymentsGetCatalogCompletedFailed',paymentsGetPurchases:'OnPaymentsGetPurchasesCompletedFailed',remoteConfigGet:'OnRemoteConfigGetFailed',achievementsUnlock:'OnAchievementsUnlockCompleted',achievementsShowNativePopup:'OnAchievementsShowNativePopupCompleted',achievementsGetList:'OnAchievementsGetListCompletedFailed'};
+ for(const [name,event] of Object.entries(unsupported))host[name]=()=>send(event,'false');
+}
+</script>
+<script>
+const canvas=document.getElementById('canvas'),status=document.getElementById('status');
+const source='https://cdn.jsdelivr.net/gh/fedosyamamontova/config@702ad8dd2e653c3b29446973add145b925d98b25/src/';
+let instance=null;const pending=[];
+function send(name,value){if(instance)instance.SendMessage('PlaygamaBridge',name,value);else pending.push([name,value]);}
+// Resolve storage lazily so a browser denying storage does not prevent startup.
+installGolfBridge(window,{getItem:key=>localStorage.getItem(key),setItem:(key,value)=>localStorage.setItem(key,value),removeItem:key=>localStorage.removeItem(key)},send);
+window.getVisibilityState=()=>document.visibilityState;
+document.addEventListener('visibilitychange',()=>send('OnVisibilityStateChanged',document.visibilityState));
+canvas.addEventListener('pointerdown',()=>canvas.focus());
+function fail(){status.hidden=false;status.textContent='Golf Orbit could not load its game files. Please check your connection and reload.';}
+const loader=document.createElement('script');loader.src=source+'loader.js';loader.onerror=fail;
+loader.onload=async()=>{try{
+ instance=await createUnityInstance(canvas,{dataUrl:source+'go.d.js',frameworkUrl:source+'go.f.js',codeUrl:source+'go.w.js',streamingAssetsUrl:source+'sa',companyName:'PinpinTeam',productName:'Golf Orbit',productVersion:'1.0'},progress=>{status.textContent='Loading Golf Orbit... '+Math.round(progress*100)+'%';});
+ for(const [name,value] of pending.splice(0))send(name,value);status.hidden=true;canvas.focus();
+}catch(error){console.error('Golf Orbit startup failed',error);fail();}};
+document.head.append(loader);
+</script></body></html>
