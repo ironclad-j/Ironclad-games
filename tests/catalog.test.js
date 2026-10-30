@@ -38,7 +38,7 @@ test("Super Mario Bros. uses the supplied source",()=>{assert.equal(catalog.find
 
 test("Golf Orbit uses the local player without the advertising SDK",()=>{assert.equal(catalog.find(g=>g.id==="golf-orbit")?.frameUrl,"./golf-player.html");});
 
-test("Happy Wheels uses the Flash iframe player",()=>{assert.equal(catalog.find(g=>g.id==="happy-wheels")?.frameUrl,"./flash-player.html?game=happy-wheels");});
+test("Happy Wheels uses the supplied bkrzt player",()=>{assert.equal(catalog.find(g=>g.id==="happy-wheels")?.frameUrl,"https://bkrztpisrgtrux06ao4p.github.io/happywheels.html");});
 
 test("Age of War uses the Flash iframe player",()=>{assert.equal(catalog.find(g=>g.id==="age-of-war")?.frameUrl,"./flash-player.html?game=age-of-war");});
 
