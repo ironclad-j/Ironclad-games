@@ -4,7 +4,7 @@
   "private": true,
   "type": "module",
   "scripts": {
-    "test": "node --test tests/auth.test.js tests/catalog.test.js tests/controller.test.js tests/frame-host.test.js tests/games.test.js tests/save-store.test.js tests/golf-player.test.js",
+    "test": "node --test tests/auth.test.js tests/catalog.test.js tests/controller.test.js tests/frame-host.test.js tests/games.test.js tests/save-store.test.js tests/golf-player.test.js tests/game-launcher.test.js",
     "verify": "node scripts/verify-site.mjs",
     "dev": "node scripts/serve.mjs"
   },
