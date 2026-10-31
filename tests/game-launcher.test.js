@@ -1,0 +1,16 @@
+import test from 'node:test';import assert from 'node:assert/strict';import vm from 'node:vm';import fs from 'node:fs/promises';
+const html=await fs.readFile(new URL('../index.html',import.meta.url),'utf8');
+const code=html.match(/<script id="game-launcher">([\s\S]*?)<\/script>/)?.[1]||'';
+function launch(){const c=vm.createContext({URL});vm.runInContext(code,c);assert.equal(typeof c.openGameTab,'function','Play must use the game-only about:blank launcher');return c.openGameTab;}
+function popupFixture(){const head=[],body=[];const popup={opener:{},closed:false,focus(){},close(){this.closed=true;},document:{title:'',documentElement:{lang:'',requestFullscreen:()=>Promise.reject(Error('not allowed'))},head:{append:node=>head.push(node)},body:{replaceChildren:node=>body.push(node)},createElement:tag=>({tagName:tag,addEventListener(){},focus(){}})}};return {popup,head,body};}
+test('Play opens about:blank synchronously and fills it with only the selected game',()=>{
+ const f=popupFixture(),calls=[];const result=launch()({title:'Golf Orbit',src:'./golf-player.html'},'https://ironclad-j.github.io/Ironclad-games/',{title:'Golf Orbit | Ironclad Games',icon:'https://ironclad-j.github.io/Ironclad-games/assets/icon.svg'},{open(...args){calls.push(args);return f.popup;}});
+ assert.equal(result.opened,true);assert.deepEqual(calls,[['about:blank','_blank']]);assert.equal(f.body.length,1);assert.equal(f.body[0].tagName,'iframe');assert.equal(f.body[0].src,'https://ironclad-j.github.io/Ironclad-games/golf-player.html');assert.equal(f.body[0].title,'Golf Orbit');assert.equal(f.body[0].allowFullscreen,true);assert.equal(f.popup.opener,null);
+ assert.ok(f.body[0].sandbox.includes('allow-pointer-lock'));assert.ok(!f.body[0].sandbox.includes('allow-popups'));assert.ok(!f.body[0].sandbox.includes('allow-top-navigation'));
+ assert.equal(f.popup.document.title,'Golf Orbit | Ironclad Games');assert.ok(f.head.some(e=>e.tagName==='style'&&e.textContent.includes('width:100%')&&e.textContent.includes('height:100%')));
+});
+test('a blocked popup is reported and the library can remain usable',()=>{assert.equal(launch()({title:'Age of War',src:'https://example.com/game'},'https://ironclad-j.github.io/',{title:'Google',icon:'https://example.com/icon'},{open:()=>null}).reason,'blocked');});
+test('a failed popup setup closes the empty tab',()=>{const f=popupFixture();Object.defineProperty(f.popup,'document',{get(){throw Error('unavailable');}});assert.equal(launch()({title:'Age of War',src:'https://example.com/game'},'https://ironclad-j.github.io/',{title:'Google',icon:'https://example.com/icon'},{open:()=>f.popup}).reason,'unavailable');assert.equal(f.popup.closed,true);});
+test('an unsupported game URL never opens a new tab',()=>{let opened=false;const result=launch()({title:'Bad',src:'javascript:alert(1)'},'https://ironclad-j.github.io/',{title:'Google',icon:'https://example.com/icon'},{open(){opened=true;}});assert.equal(result.opened,false);assert.equal(opened,false);});
+
+test("an exception from the popup API is reported as blocked",()=>{const result=launch()({title:"Age of War",src:"https://example.com/game"},"https://ironclad-j.github.io/",{title:"Google",icon:"https://example.com/icon"},{open(){throw Error("denied");}});assert.equal(result.reason,"blocked");});

@@ -18,7 +18,6 @@
       <select id="tab-appearance"><option value="ironclad">Ironclad Games</option><option value="google">Google</option><option value="canva">Canva</option><option value="canvas">Canvas</option><option value="drive">Google Drive</option><option value="docs">Google Docs</option><option value="slides">Google Slides</option></select>
       <p>Applies immediately and is saved on this device.</p><p id="appearance-status" role="status" aria-live="polite"></p>
     </section>
-    <section class="setting-group"><h3>about:blank</h3><p>Open the full game library in an about:blank tab. Games still load from their original hosts.</p><button class="button" id="open-blank" type="button">Open in about:blank</button><p id="blank-status" role="status" aria-live="polite"></p></section>
   </dialog>
   <div class="site">
     <header class="header"><button class="brand" id="home-games" type="button" aria-label="Ironclad Games home">Ironclad<span>Games</span></button></header>
@@ -28,6 +27,7 @@
           <div><h1>Games</h1><p id="search-status" role="status" aria-live="polite">34 games</p></div>
           <div role="search"><label class="search"><input type="search" id="game-search" aria-label="Search games" placeholder="Search games" autocomplete="off" aria-controls="game-grid"><button type="button" class="text-button" id="clear-search" aria-label="Clear search" hidden>Clear</button></label></div>
         </div>
+        <p id="launch-status" class="save-note" role="status" aria-live="polite" hidden></p>
         <div class="game-grid" id="game-grid">
           <article class="game-card">
             <div class="game-art" style="--card-bg:#191919;height:auto;aspect-ratio:1">
@@ -172,14 +172,28 @@
         </div>
         <p class="empty-state" id="search-empty" hidden>No games found. Try another name or clear your search.</p>
       </section>
-      <section id="player-view" hidden>
-        <div class="player-heading"><button class="text-button" id="back-library">&larr; Games</button><span>Use the controls shown in the game.</span></div>
-        <div class="player-toolbar"><h1 id="game-title">Drive Mad</h1><div><button class="button" id="fullscreen">Fullscreen</button></div></div>
-        <div class="frame-container" id="frame-container"></div>
-        <p id="player-message" role="status"></p>
-      </section>
     </main>
   </div>
+  <script id="game-launcher">
+    function openGameTab(game,baseUrl,preset,browser=window){
+      let src;try{src=new URL(game.src,baseUrl);if(!['https:','http:'].includes(src.protocol))return {opened:false,reason:'unavailable'};}catch{return {opened:false,reason:'unavailable'};}
+      let popup;try{popup=browser.open('about:blank','_blank');}catch{return {opened:false,reason:'blocked'};}
+      if(!popup)return {opened:false,reason:'blocked'};
+      try{
+        const page=popup.document;page.title=preset.title;page.documentElement.lang='en';
+        const style=page.createElement('style');style.textContent='html,body{width:100%;height:100%;margin:0;overflow:hidden;background:#000}iframe{position:fixed;inset:0;width:100%;height:100%;border:0;display:block}';page.head.append(style);
+        const icon=page.createElement('link');icon.rel='icon';icon.href=preset.icon;page.head.append(icon);
+        const theme=page.createElement('meta');theme.name='theme-color';theme.content='#000000';page.head.append(theme);
+        const frame=page.createElement('iframe');frame.title=game.title;frame.allow='fullscreen; autoplay; gamepad';frame.allowFullscreen=true;
+        frame.sandbox='allow-scripts allow-same-origin allow-forms allow-pointer-lock';frame.referrerPolicy='strict-origin';
+        frame.addEventListener('load',()=>frame.focus());frame.src=src.href;page.body.replaceChildren(frame);
+        popup.opener=null;popup.focus();frame.focus();
+        // Fullscreen remains subject to browser activation and permission rules.
+        try{page.documentElement.requestFullscreen?.({navigationUI:'hide'})?.catch(()=>{});}catch{}
+        return {opened:true};
+      }catch{try{popup.close();}catch{}return {opened:false,reason:'unavailable'};}
+    }
+  </script>
   <script type="module">
     const tabPresets=Object.freeze({
       ironclad:{title:'Ironclad Games',icon:new URL('./assets/icon.svg',document.baseURI).href},
@@ -192,8 +206,7 @@
     });
     const appearanceKey='ironclad-tab-appearance-v1';
     const appearance=document.getElementById('tab-appearance'),appearanceStatus=document.getElementById('appearance-status');
-    const settingsDialog=document.getElementById('site-settings'),blankStatus=document.getElementById('blank-status');
-    const isBlankArcade=location.href==='about:blank';
+    const settingsDialog=document.getElementById('site-settings');
     function setTabMetadata(target,preset){
       target.title=preset.title;let icon=target.querySelector('link[rel="icon"]');
       if(!icon){icon=target.createElement('link');icon.rel='icon';target.head.append(icon);}
@@ -213,34 +226,6 @@
     document.getElementById('open-settings').addEventListener('click',()=>settingsDialog.showModal());
     document.getElementById('close-settings').addEventListener('click',()=>settingsDialog.close());
     settingsDialog.addEventListener('click',event=>{if(event.target===settingsDialog){const rect=settingsDialog.getBoundingClientRect();if(event.clientX<rect.left||event.clientX>rect.right||event.clientY<rect.top||event.clientY>rect.bottom)settingsDialog.close();}});
-    const blankButton=document.getElementById('open-blank');
-    if(isBlankArcade){blankButton.disabled=true;blankStatus.textContent='You are already in the about:blank arcade.';}
-    blankButton.addEventListener('click',()=>{
-      const popup=window.open('about:blank','_blank');
-      if(!popup){blankStatus.textContent='The browser blocked the new tab. Allow pop-ups for Ironclad and try again.';return;}
-      try{
-        const template=document.documentElement.cloneNode(true);
-        template.querySelectorAll('base').forEach(element=>element.remove());
-        const base=document.createElement('base');base.href=new URL('./',document.baseURI).href;template.querySelector('head').prepend(base);
-        template.querySelector('#site-settings').removeAttribute('open');
-        template.querySelector('#player-view').hidden=true;template.querySelector('#library-view').hidden=false;
-        template.querySelector('#frame-container').replaceChildren();
-        template.querySelectorAll('.game-card').forEach(card=>card.hidden=false);
-        template.querySelector('#game-search').removeAttribute('value');
-        template.querySelector('#clear-search').hidden=true;template.querySelector('#search-empty').hidden=true;
-        template.querySelector('#appearance-status').textContent='';template.querySelector('#blank-status').textContent='';
-        delete template.dataset.arcadeReady;
-        const html='<!doctype html>'+template.outerHTML;
-        // Initialize from the new window's own realm so its address remains about:blank.
-        popup.__ironcladReport=(url,count,ready)=>{
-          blankStatus.textContent=url==='about:blank'&&ready?'Opened all '+count+' games in the about:blank tab.':'The arcade did not finish loading in the new tab. Please try again.';
-        };
-        const bootstrap=popup.document.createElement('script');
-        bootstrap.textContent='document.open();document.write('+JSON.stringify(html)+');document.close();window.addEventListener("load",()=>{window.__ironcladReport(document.URL,document.querySelectorAll(".game-card").length,document.documentElement.dataset.arcadeReady==="true");delete window.__ironcladReport;},{once:true});';
-        blankStatus.textContent='Loading the arcade in about:blank...';
-        popup.document.body.append(bootstrap);popup.opener=null;
-      }catch{popup.close();blankStatus.textContent='This browser could not open the arcade in about:blank. You can keep playing here.';}
-    });
     const games={
       'drive-mad':{title:'Drive Mad',src:'https://ubghyper.github.io/GameList.github.io/Drive-Mad/'},
       'moto-road-rash-3d':{title:'Moto Road Rash 3D',src:'https://class811.github.io/g7/moto-road-rash-3d/'},
@@ -287,11 +272,9 @@
         }
       }).catch(() => {});
     }
-    const library=document.getElementById('library-view'),player=document.getElementById('player-view');
-    const container=document.getElementById('frame-container'),message=document.getElementById('player-message');
+    const launchStatus=document.getElementById('launch-status');
     const search=document.getElementById('game-search'),clear=document.getElementById('clear-search');
     const cards=[...document.querySelectorAll('.game-card')].map(card=>({card,text:card.textContent.toLowerCase().replace(/\s+/g,' ')}));
-    let activeButton=null,mountedGame=null;
     function filterLibrary(){
       const terms=search.value.trim().toLowerCase().split(/\s+/).filter(Boolean);let count=0;
       for(const {card,text} of cards){const matches=terms.every(term=>text.includes(term));card.hidden=!matches;if(matches)count++;}
@@ -302,23 +285,13 @@
     search.addEventListener('input',filterLibrary);clear.addEventListener('click',resetSearch);
     search.addEventListener('keydown',event=>{if(event.key==='Escape'){event.preventDefault();resetSearch();}});
     document.querySelectorAll('[data-game]').forEach(button=>button.addEventListener('click',()=>{
-      const game=games[button.dataset.game];if(!game)return;activeButton=button;
-      if(mountedGame!==button.dataset.game){
-        mountedGame=button.dataset.game;
-        const frame=document.createElement('iframe');frame.title=game.title;frame.allow='fullscreen; autoplay; gamepad';frame.allowFullscreen=true;
-        frame.sandbox='allow-scripts allow-same-origin allow-forms allow-pointer-lock';frame.referrerPolicy='strict-origin';
-        document.getElementById('game-title').textContent=game.title;message.textContent='Loading '+game.title+'...';
-        frame.addEventListener('load',()=>{message.textContent='';if(!player.hidden)frame.focus();});frame.src=game.src;container.replaceChildren(frame);
-      }
-      library.hidden=true;player.hidden=false;window.scrollTo(0,0);container.querySelector('iframe')?.focus();
+      const game=games[button.dataset.game];if(!game)return;
+      const preset=tabPresets[appearance.value]||tabPresets.ironclad;
+      const result=openGameTab(game,document.baseURI,{title:appearance.value==='ironclad'?game.title+' | Ironclad Games':preset.title,icon:preset.icon});
+      launchStatus.hidden=false;
+      launchStatus.textContent=result.opened?'Opened '+game.title+' in about:blank.':result.reason==='blocked'?'The browser blocked the game tab. Allow pop-ups for Ironclad, then press Play again.':'This browser could not open the game tab. Please try again.';
     }));
-    function showLibrary(){player.hidden=true;library.hidden=false;window.scrollTo(0,0);activeButton?.focus();}
-    document.getElementById('back-library').addEventListener('click',showLibrary);
-    document.getElementById('home-games').addEventListener('click',showLibrary);
-    document.getElementById('fullscreen').addEventListener('click',async()=>{
-      try{if(document.fullscreenElement)await document.exitFullscreen();else await container.requestFullscreen();container.querySelector('iframe')?.focus();}
-      catch{message.textContent='Fullscreen is unavailable. You can keep playing here.';}
-    });
+    document.getElementById('home-games').addEventListener('click',()=>{resetSearch();window.scrollTo(0,0);});
     filterLibrary();
     document.documentElement.dataset.arcadeReady='true';
   </script>
