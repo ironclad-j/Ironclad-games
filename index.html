@@ -24,7 +24,7 @@
     <main id="main">
       <section id="library-view">
         <div class="page-heading">
-          <div><h1>Games</h1><p id="search-status" role="status" aria-live="polite">34 games</p></div>
+          <div><h1>Games</h1><p id="search-status" role="status" aria-live="polite">35 games</p></div>
           <div role="search"><label class="search"><input type="search" id="game-search" aria-label="Search games" placeholder="Search games" autocomplete="off" aria-controls="game-grid"><button type="button" class="text-button" id="clear-search" aria-label="Clear search" hidden>Clear</button></label></div>
         </div>
         <p id="launch-status" class="save-note" role="status" aria-live="polite" hidden></p>
@@ -169,6 +169,10 @@
             <div class="game-art" style="--card-bg:#111;height:auto;aspect-ratio:1"><img src="./assets/minecraft-1-8.png" alt="Minecraft 1.8" width="546" height="600" style="display:block;width:100%;height:100%;object-fit:contain" loading="lazy"></div>
             <div class="game-content"><div class="game-title"><h2>Minecraft 1.8</h2><span class="category">Sandbox</span></div><p>Build and explore a block-filled world.</p><button class="play-button" data-game="minecraft-1-8" aria-label="Play Minecraft 1.8">Play</button></div>
           </article>
+          <article class="game-card">
+            <div class="game-art" style="--card-bg:#111;height:auto;aspect-ratio:1"><img src="./assets/get-yoked.png" alt="Get Yoked" width="1024" height="1024" style="display:block;width:100%;height:100%;object-fit:contain" loading="lazy"></div>
+            <div class="game-content"><div class="game-title"><h2>Get Yoked</h2><span class="category">Strategy</span></div><p>Build your deck, train your bodybuilder, and manage fatigue.</p><button class="play-button" data-game="get-yoked" aria-label="Play Get Yoked">Play</button></div>
+          </article>
         </div>
         <p class="empty-state" id="search-empty" hidden>No games found. Try another name or clear your search.</p>
       </section>
@@ -261,6 +265,7 @@
       , 'happy-wheels':{title:'Happy Wheels',src:'https://bkrztpisrgtrux06ao4p.github.io/happywheels.html'}
       , 'ages-of-conflict':{title:"Ages of Conflict",src:"https://bkrztpisrgtrux06ao4p.github.io/agesofconflict.html"}
       , 'minecraft-1-8':{title:"Minecraft 1.8",src:"https://bkrztpisrgtrux06ao4p.github.io/1.8.html"}
+      , 'get-yoked':{title:'Get Yoked',src:'https://unblockedgames88.gitlab.io/g2/getyoked/'}
     };
 
     // Retire the old browsing worker without touching game saves.
