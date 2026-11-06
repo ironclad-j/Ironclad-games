@@ -8,7 +8,7 @@
   <meta name="description" content="Play games on Ironclad Games.">
   <title>Ironclad Games</title>
   <link rel="icon" href="./assets/icon.svg" type="image/svg+xml">
-  <link rel="stylesheet" href="./assets/site.css?v=launch-options-1">
+  <link rel="stylesheet" href="./assets/site.css?v=close-protection-1">
 </head>
 <body>
   <nav class="settings-rail" aria-label="Site settings"><button id="open-settings" type="button" aria-label="Settings" title="Settings"><span aria-hidden="true">&#9881;</span><span>Settings</span></button></nav>
@@ -18,6 +18,25 @@
       <select id="tab-appearance"><option value="ironclad">Ironclad Games</option><option value="google">Google</option><option value="canva">Canva</option><option value="canvas">Canvas</option><option value="drive">Google Drive</option><option value="docs">Google Docs</option><option value="slides">Google Slides</option></select>
       <p>Applies immediately and is saved on this device.</p><p id="appearance-status" role="status" aria-live="polite"></p>
     </section>
+    <section class="setting-group"><h3>Close game protection</h3>
+      <p id="protection-state">Off</p>
+      <p>Require your password for Close game or Home while playing inside Ironclad. Browser tab controls still work normally.</p>
+      <form id="protection-form">
+        <div id="current-password-group" hidden><label for="current-close-password">Current password</label><input id="current-close-password" type="password" autocomplete="current-password" maxlength="256"></div>
+        <label for="new-close-password">New password</label><input id="new-close-password" type="password" autocomplete="new-password" minlength="8" maxlength="256" required>
+        <label for="confirm-close-password">Confirm new password</label><input id="confirm-close-password" type="password" autocomplete="new-password" minlength="8" maxlength="256" required>
+        <p>Use at least 8 characters. This setting is saved only in this browser. Clearing site data removes it.</p>
+        <div class="choice-actions"><button class="button primary" id="save-close-password" type="submit">Set password</button><button class="button" id="remove-close-password" type="button" hidden>Remove password</button></div>
+      </form>
+      <p id="protection-status" role="status" aria-live="polite"></p>
+    </section>
+  </dialog>
+  <dialog id="confirm-game-close" aria-labelledby="confirm-close-heading">
+    <h2 id="confirm-close-heading">Close game</h2><p>Enter your password to stop this game and return to the library.</p>
+    <form id="confirm-close-form"><label for="close-password">Password</label><input id="close-password" type="password" autocomplete="current-password" maxlength="256" required>
+      <p id="close-password-status" role="status" aria-live="polite"></p>
+      <div class="choice-actions"><button class="button" id="cancel-game-close" type="button">Keep playing</button><button class="button primary" id="confirm-close-button" type="submit">Close game</button></div>
+    </form>
   </dialog>
   <dialog id="launch-options" aria-labelledby="launch-heading">
     <div class="settings-heading"><h2 id="launch-heading">Open game</h2><button class="button" id="cancel-launch" aria-label="Cancel game launch">&times;</button></div>
@@ -187,6 +206,42 @@
       </section>
     </main>
   </div>
+  <script id="close-protection">
+    function createCloseProtection(storage,cryptoApi=crypto){
+      const key='ironclad-close-protection-v1',iterations=600000;
+      function read(){
+        const raw=storage.getItem(key);if(raw===null)return {raw,record:null};
+        let record;try{record=JSON.parse(raw);}catch{throw Error('The saved close protection setting could not be read.');}
+        if(record?.version!==1||record.iterations!==iterations||!/^[a-f0-9]{32}$/.test(record.salt)||!/^[a-f0-9]{64}$/.test(record.hash))throw Error('The saved close protection setting could not be read.');
+        return {raw,record};
+      }
+      const hex=bytes=>Array.from(bytes,b=>b.toString(16).padStart(2,'0')).join('');
+      async function digest(password,salt){
+        if(!cryptoApi?.subtle)throw Error('This browser cannot save password protection.');
+        const material=await cryptoApi.subtle.importKey('raw',new TextEncoder().encode(password),'PBKDF2',false,['deriveBits']);
+        const bytes=Uint8Array.from(salt.match(/../g),b=>parseInt(b,16));
+        return hex(new Uint8Array(await cryptoApi.subtle.deriveBits({name:'PBKDF2',hash:'SHA-256',salt:bytes,iterations},material,256)));
+      }
+      function unchanged(snapshot){if(storage.getItem(key)!==snapshot.raw)throw Error('The password setting changed in another tab. Please try again.');}
+      async function verify(snapshot,password){
+        if(!snapshot.record)return true;
+        if(typeof password!=='string'||password.length>256)return false;
+        const hash=await digest(password,snapshot.record.salt);unchanged(snapshot);return hash===snapshot.record.hash;
+      }
+      return {
+        enabled:()=>read().record!==null,
+        async save(current,password){
+          if(typeof password!=='string'||password.length<8||password.length>256)throw Error('Use a password between 8 and 256 characters.');
+          const snapshot=read();if(!await verify(snapshot,current))throw Error('Current password is incorrect.');
+          if(!cryptoApi?.getRandomValues)throw Error('This browser cannot save password protection.');
+          const salt=hex(cryptoApi.getRandomValues(new Uint8Array(16))),hash=await digest(password,salt);unchanged(snapshot);
+          storage.setItem(key,JSON.stringify({version:1,iterations,salt,hash}));
+        },
+        async remove(current){const snapshot=read();if(!await verify(snapshot,current))throw Error('Current password is incorrect.');unchanged(snapshot);storage.removeItem(key);},
+        async authorizeClose(password,action){const snapshot=read();if(!await verify(snapshot,password))return false;unchanged(snapshot);action();return true;}
+      };
+    }
+  </script>
   <script id="game-launcher">
     function createGameFrame(game,baseUrl,page){
       const src=new URL(game.src,baseUrl);if(!['https:','http:'].includes(src.protocol))throw Error('Unsupported game URL');
@@ -229,6 +284,28 @@
     const appearanceKey='ironclad-tab-appearance-v1';
     const appearance=document.getElementById('tab-appearance'),appearanceStatus=document.getElementById('appearance-status');
     const settingsDialog=document.getElementById('site-settings');
+    const closeProtection=createCloseProtection({getItem:key=>localStorage.getItem(key),setItem:(key,value)=>localStorage.setItem(key,value),removeItem:key=>localStorage.removeItem(key)});
+    const protectionForm=document.getElementById('protection-form'),protectionStatus=document.getElementById('protection-status');
+    const currentPassword=document.getElementById('current-close-password'),newPassword=document.getElementById('new-close-password'),confirmPassword=document.getElementById('confirm-close-password');
+    const savePassword=document.getElementById('save-close-password'),removePassword=document.getElementById('remove-close-password');
+    let savingProtection=false;
+    function refreshProtection(){
+      try{const enabled=closeProtection.enabled();document.getElementById('protection-state').textContent=enabled?'On — password required':'Off';document.getElementById('current-password-group').hidden=!enabled;currentPassword.required=enabled;removePassword.hidden=!enabled;savePassword.textContent=enabled?'Change password':'Set password';for(const control of protectionForm.elements)control.disabled=savingProtection;}
+      catch(error){document.getElementById('protection-state').textContent='Unavailable';protectionStatus.textContent=error.message;for(const control of protectionForm.elements)control.disabled=true;}
+    }
+    refreshProtection();
+    async function updateProtection(remove){
+      if(savingProtection)return;
+      if(!remove&&newPassword.value!==confirmPassword.value){protectionStatus.textContent='The new passwords do not match.';confirmPassword.focus();return;}
+      savingProtection=true;savePassword.disabled=true;removePassword.disabled=true;protectionStatus.textContent='Saving…';
+      try{if(remove)await closeProtection.remove(currentPassword.value);else await closeProtection.save(currentPassword.value,newPassword.value);protectionForm.reset();protectionStatus.textContent=remove?'Password removed.':'Password saved.';}
+      catch(error){protectionStatus.textContent=error.message;}
+      finally{savingProtection=false;refreshProtection();}
+    }
+    protectionForm.addEventListener('submit',event=>{event.preventDefault();updateProtection(false);});
+    removePassword.addEventListener('click',()=>updateProtection(true));
+    settingsDialog.addEventListener('close',()=>{protectionForm.reset();if(!savingProtection)protectionStatus.textContent='';refreshProtection();});
+    window.addEventListener('storage',event=>{if(event.key==='ironclad-close-protection-v1'||event.key===null){protectionForm.reset();refreshProtection();}});
     function setTabMetadata(target,preset){
       target.title=preset.title;let icon=target.querySelector('link[rel="icon"]');
       if(!icon){icon=target.createElement('link');icon.rel='icon';target.head.append(icon);}
@@ -313,6 +390,24 @@
       closeInlineGame(frameHost);player.hidden=true;library.hidden=false;
       if(selectedButton)selectedButton.focus();
     }
+    const closeDialog=document.getElementById('confirm-game-close'),closeForm=document.getElementById('confirm-close-form'),closePassword=document.getElementById('close-password'),closeStatus=document.getElementById('close-password-status'),closeConfirm=document.getElementById('confirm-close-button');
+    let pendingClose=null,closeAttempt=0;
+    function requestGameClose(action){
+      if(player.hidden){action();return;}
+      try{if(!closeProtection.enabled()){action();return;}}catch{}
+      pendingClose=action;closeForm.reset();closeStatus.textContent='';closeConfirm.disabled=false;closeDialog.showModal();closePassword.focus();
+    }
+    closeDialog.addEventListener('close',()=>{pendingClose=null;closeAttempt++;closeForm.reset();closeStatus.textContent='';});
+    document.getElementById('cancel-game-close').addEventListener('click',()=>closeDialog.close());
+    closeForm.addEventListener('submit',async event=>{
+      event.preventDefault();if(closeConfirm.disabled)return;
+      const action=pendingClose,attempt=++closeAttempt;closeConfirm.disabled=true;closeStatus.textContent='Checking…';
+      try{
+        const allowed=await closeProtection.authorizeClose(closePassword.value,()=>{if(attempt!==closeAttempt||!closeDialog.open)return;closeDialog.close();if(action)action();});
+        if(attempt===closeAttempt&&!allowed){closeStatus.textContent='Incorrect password. Your game is still open.';closePassword.value='';closePassword.focus();}
+      }catch(error){if(attempt===closeAttempt)closeStatus.textContent=error.message;}
+      finally{if(attempt===closeAttempt)closeConfirm.disabled=false;}
+    });
     document.querySelectorAll('[data-game]').forEach(button=>button.addEventListener('click',()=>{
       const game=games[button.dataset.game];if(!game)return;
       selectedGame=game;selectedButton=button;document.getElementById('launch-heading').textContent='Open '+game.title;launchDialog.showModal();
@@ -333,8 +428,8 @@
       document.getElementById('player-title').textContent=game.title;library.hidden=true;player.hidden=false;launchStatus.hidden=true;
       window.scrollTo(0,0);frameHost.querySelector('iframe')?.focus();
     });
-    document.getElementById('close-game').addEventListener('click',restoreLibrary);
-    document.getElementById('home-games').addEventListener('click',()=>{restoreLibrary();resetSearch();window.scrollTo(0,0);});
+    document.getElementById('close-game').addEventListener('click',()=>requestGameClose(restoreLibrary));
+    document.getElementById('home-games').addEventListener('click',()=>requestGameClose(()=>{restoreLibrary();resetSearch();window.scrollTo(0,0);}));
     filterLibrary();
     document.documentElement.dataset.arcadeReady='true';
   </script>
