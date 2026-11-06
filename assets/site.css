@@ -91,5 +91,8 @@ dialog p{font-size:13px;color:var(--muted);line-height:1.6}
 .setting-group p{font-size:12px;line-height:1.7}.setting-group [role="status"]{min-height:20px;margin:12px 0 0}
 #open-blank:disabled{cursor:default}
 .launch-actions{display:grid;gap:12px}.launch-actions .button{padding:14px;text-align:left}
+#protection-form input,#confirm-close-form input{width:100%;background:#1c1c1c;border:1px solid #3b3b3b;color:var(--ink);padding:11px 10px;border-radius:5px;font:inherit;margin-bottom:16px}
+#confirm-close-form label{display:block;font-size:12px;margin-bottom:9px;color:var(--muted)}
+#close-password-status{min-height:20px}#protection-state{font-weight:600;color:var(--ink)}
 #launch-options .settings-heading{margin-bottom:12px}
 @media(max-width:700px){.site{padding-left:80px;padding-right:16px}.settings-rail{width:60px}.header{gap:10px}}
