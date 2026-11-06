@@ -8,7 +8,7 @@
   <meta name="description" content="Play games on Ironclad Games.">
   <title>Ironclad Games</title>
   <link rel="icon" href="./assets/icon.svg" type="image/svg+xml">
-  <link rel="stylesheet" href="./assets/site.css?v=settings-1">
+  <link rel="stylesheet" href="./assets/site.css?v=launch-options-1">
 </head>
 <body>
   <nav class="settings-rail" aria-label="Site settings"><button id="open-settings" type="button" aria-label="Settings" title="Settings"><span aria-hidden="true">&#9881;</span><span>Settings</span></button></nav>
@@ -18,6 +18,11 @@
       <select id="tab-appearance"><option value="ironclad">Ironclad Games</option><option value="google">Google</option><option value="canva">Canva</option><option value="canvas">Canvas</option><option value="drive">Google Drive</option><option value="docs">Google Docs</option><option value="slides">Google Slides</option></select>
       <p>Applies immediately and is saved on this device.</p><p id="appearance-status" role="status" aria-live="polite"></p>
     </section>
+  </dialog>
+  <dialog id="launch-options" aria-labelledby="launch-heading">
+    <div class="settings-heading"><h2 id="launch-heading">Open game</h2><button class="button" id="cancel-launch" aria-label="Cancel game launch">&times;</button></div>
+    <p>Choose where to play.</p>
+    <div class="launch-actions"><button class="button" id="launch-blank">Open in about:blank</button><button class="button primary" id="launch-ironclad">Open in Ironclad Games</button></div>
   </dialog>
   <div class="site">
     <header class="header"><button class="brand" id="home-games" type="button" aria-label="Ironclad Games home">Ironclad<span>Games</span></button></header>
@@ -176,9 +181,24 @@
         </div>
         <p class="empty-state" id="search-empty" hidden>No games found. Try another name or clear your search.</p>
       </section>
+      <section id="player-view" aria-labelledby="player-title" hidden>
+        <div class="player-toolbar"><h1 id="player-title"></h1><button class="button" id="close-game">Close game</button></div>
+        <div class="frame-container" id="game-frame-host"></div>
+      </section>
     </main>
   </div>
   <script id="game-launcher">
+    function createGameFrame(game,baseUrl,page){
+      const src=new URL(game.src,baseUrl);if(!['https:','http:'].includes(src.protocol))throw Error('Unsupported game URL');
+      const frame=page.createElement('iframe');frame.title=game.title;frame.allow='fullscreen; autoplay; gamepad';frame.allowFullscreen=true;
+      frame.sandbox='allow-scripts allow-same-origin allow-forms allow-pointer-lock';frame.referrerPolicy='strict-origin';
+      frame.addEventListener('load',()=>frame.focus());frame.src=src.href;return frame;
+    }
+    function openInlineGame(game,baseUrl,host,page=document){
+      try{const frame=createGameFrame(game,baseUrl,page);host.replaceChildren(frame);frame.focus();return {opened:true};}
+      catch{return {opened:false,reason:'unavailable'};}
+    }
+    function closeInlineGame(host){host.replaceChildren();}
     function openGameTab(game,baseUrl,preset,browser=window){
       let src;try{src=new URL(game.src,baseUrl);if(!['https:','http:'].includes(src.protocol))return {opened:false,reason:'unavailable'};}catch{return {opened:false,reason:'unavailable'};}
       let popup;try{popup=browser.open('about:blank','_blank');}catch{return {opened:false,reason:'blocked'};}
@@ -188,9 +208,7 @@
         const style=page.createElement('style');style.textContent='html,body{width:100%;height:100%;margin:0;overflow:hidden;background:#000}iframe{position:fixed;inset:0;width:100%;height:100%;border:0;display:block}';page.head.append(style);
         const icon=page.createElement('link');icon.rel='icon';icon.href=preset.icon;page.head.append(icon);
         const theme=page.createElement('meta');theme.name='theme-color';theme.content='#000000';page.head.append(theme);
-        const frame=page.createElement('iframe');frame.title=game.title;frame.allow='fullscreen; autoplay; gamepad';frame.allowFullscreen=true;
-        frame.sandbox='allow-scripts allow-same-origin allow-forms allow-pointer-lock';frame.referrerPolicy='strict-origin';
-        frame.addEventListener('load',()=>frame.focus());frame.src=src.href;page.body.replaceChildren(frame);
+        const frame=createGameFrame(game,baseUrl,page);page.body.replaceChildren(frame);
         popup.opener=null;popup.focus();frame.focus();
         // Fullscreen remains subject to browser activation and permission rules.
         try{page.documentElement.requestFullscreen?.({navigationUI:'hide'})?.catch(()=>{});}catch{}
@@ -289,14 +307,34 @@
     function resetSearch(){search.value='';filterLibrary();search.focus();}
     search.addEventListener('input',filterLibrary);clear.addEventListener('click',resetSearch);
     search.addEventListener('keydown',event=>{if(event.key==='Escape'){event.preventDefault();resetSearch();}});
+    const launchDialog=document.getElementById('launch-options'),library=document.getElementById('library-view'),player=document.getElementById('player-view'),frameHost=document.getElementById('game-frame-host');
+    let selectedGame=null,selectedButton=null;
+    function restoreLibrary(){
+      closeInlineGame(frameHost);player.hidden=true;library.hidden=false;
+      if(selectedButton)selectedButton.focus();
+    }
     document.querySelectorAll('[data-game]').forEach(button=>button.addEventListener('click',()=>{
       const game=games[button.dataset.game];if(!game)return;
+      selectedGame=game;selectedButton=button;document.getElementById('launch-heading').textContent='Open '+game.title;launchDialog.showModal();
+    }));
+    document.getElementById('cancel-launch').addEventListener('click',()=>launchDialog.close());
+    document.getElementById('launch-blank').addEventListener('click',()=>{
+      const game=selectedGame;if(!game)return;
       const preset=tabPresets[appearance.value]||tabPresets.ironclad;
       const result=openGameTab(game,document.baseURI,{title:appearance.value==='ironclad'?game.title+' | Ironclad Games':preset.title,icon:preset.icon});
+      launchDialog.close();
       launchStatus.hidden=false;
       launchStatus.textContent=result.opened?'Opened '+game.title+' in about:blank.':result.reason==='blocked'?'The browser blocked the game tab. Allow pop-ups for Ironclad, then press Play again.':'This browser could not open the game tab. Please try again.';
-    }));
-    document.getElementById('home-games').addEventListener('click',()=>{resetSearch();window.scrollTo(0,0);});
+    });
+    document.getElementById('launch-ironclad').addEventListener('click',()=>{
+      const game=selectedGame;if(!game)return;
+      const result=openInlineGame(game,document.baseURI,frameHost);launchDialog.close();
+      if(!result.opened){launchStatus.hidden=false;launchStatus.textContent='This game could not be opened. Please try again.';return;}
+      document.getElementById('player-title').textContent=game.title;library.hidden=true;player.hidden=false;launchStatus.hidden=true;
+      window.scrollTo(0,0);frameHost.querySelector('iframe')?.focus();
+    });
+    document.getElementById('close-game').addEventListener('click',restoreLibrary);
+    document.getElementById('home-games').addEventListener('click',()=>{restoreLibrary();resetSearch();window.scrollTo(0,0);});
     filterLibrary();
     document.documentElement.dataset.arcadeReady='true';
   </script>
