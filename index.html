@@ -20,7 +20,8 @@
     </section>
     <section class="setting-group"><h3>Close game protection</h3>
       <p id="protection-state">Off</p>
-      <p>Require your password for Close game or Home while playing inside Ironclad. Browser tab controls still work normally.</p>
+      <p>Require your password for Close game or Home while playing inside Ironclad. While a protected game is open, the browser can also warn before closing or leaving its tab, including about:blank games.</p>
+      <p>The browser controls this warning and requires an interaction in the game tab first. You can still choose to leave.</p>
       <form id="protection-form">
         <div id="current-password-group" hidden><label for="current-close-password">Current password</label><input id="current-close-password" type="password" autocomplete="current-password" maxlength="256"></div>
         <label for="new-close-password">New password</label><input id="new-close-password" type="password" autocomplete="new-password" minlength="8" maxlength="256" required>
@@ -243,6 +244,21 @@
     }
   </script>
   <script id="game-launcher">
+    function createGameCloseWarning(target,shouldWarn){
+      let attached=false,disposed=false;
+      function needed(){try{return Boolean(shouldWarn());}catch{return true;}}
+      function beforeUnload(event){if(needed()){event.preventDefault();event.returnValue=true;}}
+      function refresh(){
+        const enabled=!disposed&&needed();
+        if(enabled&&!attached){target.addEventListener('beforeunload',beforeUnload);attached=true;}
+        else if(!enabled&&attached){target.removeEventListener('beforeunload',beforeUnload);attached=false;}
+      }
+      refresh();return {refresh,dispose(){disposed=true;refresh();}};
+    }
+    function startPopupCloseWarning(){
+      const key='ironclad-close-protection-v1',warning=createGameCloseWarning(window,()=>localStorage.getItem(key)!==null);
+      window.addEventListener('storage',event=>{if(event.key===key||event.key===null)warning.refresh();});
+    }
     function createGameFrame(game,baseUrl,page){
       const src=new URL(game.src,baseUrl);if(!['https:','http:'].includes(src.protocol))throw Error('Unsupported game URL');
       const frame=page.createElement('iframe');frame.title=game.title;frame.allow='fullscreen; autoplay; gamepad';frame.allowFullscreen=true;
@@ -264,6 +280,8 @@
         const icon=page.createElement('link');icon.rel='icon';icon.href=preset.icon;page.head.append(icon);
         const theme=page.createElement('meta');theme.name='theme-color';theme.content='#000000';page.head.append(theme);
         const frame=createGameFrame(game,baseUrl,page);page.body.replaceChildren(frame);
+        // Run in the new tab's own realm so warnings survive closing the library.
+        const warningScript=page.createElement('script');warningScript.textContent='{const createGameCloseWarning='+createGameCloseWarning.toString()+';('+startPopupCloseWarning.toString()+')();}';page.head.append(warningScript);
         popup.opener=null;popup.focus();frame.focus();
         // Fullscreen remains subject to browser activation and permission rules.
         try{page.documentElement.requestFullscreen?.({navigationUI:'hide'})?.catch(()=>{});}catch{}
@@ -289,9 +307,11 @@
     const currentPassword=document.getElementById('current-close-password'),newPassword=document.getElementById('new-close-password'),confirmPassword=document.getElementById('confirm-close-password');
     const savePassword=document.getElementById('save-close-password'),removePassword=document.getElementById('remove-close-password');
     let savingProtection=false;
+    let tabCloseWarning=null;
     function refreshProtection(){
       try{const enabled=closeProtection.enabled();document.getElementById('protection-state').textContent=enabled?'On — password required':'Off';document.getElementById('current-password-group').hidden=!enabled;currentPassword.required=enabled;removePassword.hidden=!enabled;savePassword.textContent=enabled?'Change password':'Set password';for(const control of protectionForm.elements)control.disabled=savingProtection;}
       catch(error){document.getElementById('protection-state').textContent='Unavailable';protectionStatus.textContent=error.message;for(const control of protectionForm.elements)control.disabled=true;}
+      tabCloseWarning?.refresh();
     }
     refreshProtection();
     async function updateProtection(remove){
@@ -385,9 +405,11 @@
     search.addEventListener('input',filterLibrary);clear.addEventListener('click',resetSearch);
     search.addEventListener('keydown',event=>{if(event.key==='Escape'){event.preventDefault();resetSearch();}});
     const launchDialog=document.getElementById('launch-options'),library=document.getElementById('library-view'),player=document.getElementById('player-view'),frameHost=document.getElementById('game-frame-host');
+    tabCloseWarning=createGameCloseWarning(window,()=>!player.hidden&&closeProtection.enabled());
     let selectedGame=null,selectedButton=null;
     function restoreLibrary(){
       closeInlineGame(frameHost);player.hidden=true;library.hidden=false;
+      tabCloseWarning.refresh();
       if(selectedButton)selectedButton.focus();
     }
     const closeDialog=document.getElementById('confirm-game-close'),closeForm=document.getElementById('confirm-close-form'),closePassword=document.getElementById('close-password'),closeStatus=document.getElementById('close-password-status'),closeConfirm=document.getElementById('confirm-close-button');
@@ -426,6 +448,7 @@
       const result=openInlineGame(game,document.baseURI,frameHost);launchDialog.close();
       if(!result.opened){launchStatus.hidden=false;launchStatus.textContent='This game could not be opened. Please try again.';return;}
       document.getElementById('player-title').textContent=game.title;library.hidden=true;player.hidden=false;launchStatus.hidden=true;
+      tabCloseWarning.refresh();
       window.scrollTo(0,0);frameHost.querySelector('iframe')?.focus();
     });
     document.getElementById('close-game').addEventListener('click',()=>requestGameClose(restoreLibrary));
